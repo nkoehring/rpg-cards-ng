@@ -8,12 +8,16 @@ New and shiny replacement for the slightly outdated and clunky [RPC Cards Genera
 
 ## Project goals and if they are already implemented
 
+Roughly in order of planned implementation
+
  * [x] comfortable, mobile optimized interface
  * [x] handle decks of cards in a wysiwyg way
  * [x] save decks in your browser
  * [x] edit cards in a wysiwyg way
- * [ ] load icons from rpg-icons directly
+ * [ ] load graphics directly from game-icons.net
  * [ ] create and store cross-deck sets of cards
+ * [ ] allow graphics upload
+ * [ ] custom graphic sets
  * [ ] allow icons to be stored locally (in browser)
  * [ ] offline mode
 
