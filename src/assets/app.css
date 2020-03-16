@@ -1,0 +1,125 @@
+:root {
+  --card-height: 35rem;
+}
+
+html,body {
+  display: block;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: #222;
+  font-size: 10px;
+  color: #CCC;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+#app {
+  display: block;
+  margin: auto;
+  font-size: 1.6rem;
+  max-width: 90rem;
+}
+
+#app > .home-link {
+  position: absolute;
+  top: 1vh;
+  left: 1vw;
+  width: 4rem;
+  height: 4rem;
+}
+
+#logo {
+  transition: transform .3s ease-out;
+}
+#logo path.house {
+  fill: #222;
+  fill-opacity: 0.0;
+  transition: fill-opacity .3s ease-out .2s;
+}
+
+#logo:hover {
+  transform: scale(4) translate(5%, 15%);
+}
+#logo:hover path.house {
+  fill-opacity: 1.0;
+}
+
+header {
+  display: block;
+  height: 10rem;
+  font-size: 2rem;
+  line-height: 2rem;
+  padding: 4rem 0;
+  text-align: center;
+}
+header > p {
+  opacity: .6;
+}
+
+#popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background-color: #0008;
+}
+#popup > .popup-content {
+  max-width: calc(80rem);
+  height: calc(100vh - 20rem);
+  margin: 10rem auto;
+}
+
+main.popup > :not(#popup) {
+  filter: blur(10px);
+}
+
+input, button, select {
+  color: #AAA;
+  border: .2rem solid #444;
+  border-radius: .5rem;
+  background: black;
+  font-size: 1.8rem;
+  line-height: 1.5;
+}
+input {
+  padding: 0 .7em;
+}
+select {
+  padding: 0 .5em;
+}
+
+section.cards {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  justify-content: flex-start;
+}
+section.cards.centered {
+  justify-content: space-evenly;
+}
+
+a { color: inherit; text-decoration: inherit; }
+
+.card {
+  border: .2rem solid #444;
+  border-radius: .5rem;
+  box-shadow: 0 0 1rem 0 #886;
+  height: var(--card-height);
+  width: 25rem;
+  margin: 2rem;
+  cursor: pointer;
+  transition: border-color .5s ease, box-shadow 1s ease;
+}
+.card:hover, .card.active {
+  border-color: #D66;
+  box-shadow: 0 0 2rem 0 #A44;
+}
+
+button.edit-close {
+  background: white url(./zondicons/close-outline.svg) center no-repeat;
+  border: 1px solid white;
+  border-radius: 1em;
+  cursor: pointer;
+}
