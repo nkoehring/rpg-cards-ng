@@ -6,12 +6,12 @@
 
 New and shiny replacement for the slightly outdated and clunky [RPC Cards Generator](https://crobi.github.io/rpg-cards/generator/generate.html). Not yet usable.
 
-## Project goals
+## Project goals and if they are already implemented
 
  * [x] comfortable, mobile optimized interface
  * [x] handle decks of cards in a wysiwyg way
  * [x] save decks in your browser
- * [ ] edit cards in a wysiwyg way
+ * [x] edit cards in a wysiwyg way
  * [ ] load icons from rpg-icons directly
  * [ ] create and store cross-deck sets of cards
  * [ ] allow icons to be stored locally (in browser)
