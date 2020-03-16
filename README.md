@@ -1,6 +1,8 @@
 # rpg-cards-ng
 
-![Screenshot](https://raw.githubusercontent.com/nkoehring/rpg-cards-ng/master/docs/scrot.jpg)
+![Decks Overview](https://raw.githubusercontent.com/nkoehring/rpg-cards-ng/master/docs/scrot.jpg)
+
+![Deck Example](https://raw.githubusercontent.com/nkoehring/rpg-cards-ng/master/docs/scrot2.jpg)
 
 New and shiny replacement for the slightly outdated and clunky [RPC Cards Generator](https://crobi.github.io/rpg-cards/generator/generate.html). Not yet usable.
 
