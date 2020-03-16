@@ -9,7 +9,7 @@
       <header>
         <h2>{{ card.name }}</h2>
         <img :src="icon" />
-        <button class="edit-close" @click="$emit('close')" v-if="isSelection" />
+        <button class="edit-close" @click.self.stop="$emit('close')" v-if="isSelection" />
       </header>
       <main>
         <component v-for="(entry, i) in card.contents"
