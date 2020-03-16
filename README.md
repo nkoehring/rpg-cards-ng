@@ -1,6 +1,6 @@
 # rpg-cards-ng
 
-![Screenshot](https://nest.pijul.com/n4n/rpg-cards-ng:master/4a7e1e2dd8ea189109?raw)
+![Screenshot](https://raw.githubusercontent.com/nkoehring/rpg-cards-ng/master/docs/scrot.jpg)
 
 New and shiny replacement for the slightly outdated and clunky [RPC Cards Generator](https://crobi.github.io/rpg-cards/generator/generate.html). Not yet usable.
 
@@ -9,7 +9,9 @@ New and shiny replacement for the slightly outdated and clunky [RPC Cards Genera
  * [x] comfortable, mobile optimized interface
  * [x] handle decks of cards in a wysiwyg way
  * [x] save decks in your browser
+ * [ ] edit cards in a wysiwyg way
  * [ ] load icons from rpg-icons directly
+ * [ ] create and store cross-deck sets of cards
  * [ ] allow icons to be stored locally (in browser)
  * [ ] offline mode
 
