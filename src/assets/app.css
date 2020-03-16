@@ -123,3 +123,8 @@ button.edit-close {
   border-radius: 1em;
   cursor: pointer;
 }
+button.edit-pencil {
+  background: transparent url(./zondicons/edit-pencil.svg) center no-repeat;
+  border: none;
+  cursor: pointer;
+}

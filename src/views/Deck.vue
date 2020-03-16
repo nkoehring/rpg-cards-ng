@@ -30,6 +30,7 @@
         :is-selection="card === selection"
         @click="selection = card"
         @close="selection = null"
+        @edit="editCard(card, $event.field, $event.value)"
       />
       <deck-cover @click="newCard" />
     </section>
@@ -169,6 +170,10 @@ export default class DeckView extends Vue {
     const newCard = defaultCard()
     this.deck.cards.push(newCard)
     this.selection = newCard
+  }
+
+  private editCard<Card, K extends keyof Card> (card: Card, field: K, value: Card[K]) {
+    card[field] = value
   }
 }
 </script>

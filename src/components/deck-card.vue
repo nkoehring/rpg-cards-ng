@@ -7,7 +7,10 @@
   @click="clickUnlessSelected">
     <section name="card-front" class="card-front">
       <header>
-        <h2>{{ card.name }}</h2>
+        <h2 :contenteditable="isSelection"
+        @keypress.enter.prevent="editField('name', $event)">
+          {{ card.name }}
+        </h2>
         <img :src="icon" />
         <button class="edit-close" @click.self.stop="$emit('close')" v-if="isSelection" />
       </header>
@@ -16,6 +19,8 @@
           :is="`deck-card-${entry.type}`"
           :key="`e${i}`"
           :params="entry.params"
+          :editable="isSelection"
+          @edit="editContent(i, $event)"
         />
       </main>
     </section>
@@ -44,6 +49,11 @@ import DeckCardBulletList from './deck-card-bullet-list.vue'
 import DeckCardBoxes from './deck-card-boxes.vue'
 import DeckCardDndstats from './deck-card-dndstats.vue'
 
+interface ContentEditEvent {
+  param: number;
+  value: string;
+}
+
 @Component({
   components: {
     DeckCardSubtitle,
@@ -64,9 +74,31 @@ export default class DeckCard extends Vue {
   @Prop() public readonly deck!: Deck
   @Prop() public readonly isSelection!: boolean
 
+  private editHeadline = false;
+  private editFieldIndex: number | null = null;
+
   private clickUnlessSelected () {
     if (this.isSelection) return
     this.$emit('click')
+  }
+
+  private editField (field: string, event: Event) {
+    if (event.target === null) return
+    const target = event.target as HTMLElement
+    const payload = { field, value: target.innerText }
+    this.$emit('edit', payload)
+  }
+
+  private editContent (index: number, event: ContentEditEvent) {
+    const { param, value } = event
+    const field = this.card.contents[index]
+    const newContents = [...this.card.contents]
+
+    field.params[param] = value
+    newContents.splice(index, 1, field)
+
+    const payload = { field: 'contents', value: newContents }
+    this.$emit('edit', payload)
   }
 
   private get icon () {
@@ -218,5 +250,22 @@ export default class DeckCard extends Vue {
   width: 3rem;
   height: 3rem;
   margin-top: -3rem;
+}
+
+[contenteditable="true"] {
+  position: relative;
+}
+[contenteditable="true"]::after {
+  content: ' ';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-bottom: 1px dotted white;
+  mix-blend-mode: difference;
+}
+[contenteditable="true"]:focus::after {
+  border-bottom: none;
 }
 </style>
