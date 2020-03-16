@@ -1,8 +1,5 @@
 <template>
-  <h3 :contenteditable="editable"
-  @keypress.enter.prevent="$emit('edit', { param: 0, value: $event.target.innerText })">
-    {{ params[0] }}
-  </h3>
+  <h3 v-editable:0="editable">{{ params[0] }}</h3>
 </template>
 
 <script lang="ts">

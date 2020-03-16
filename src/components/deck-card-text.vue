@@ -1,5 +1,5 @@
 <template>
-  <p>{{ params[0] }}</p>
+  <p v-editable:0="editable">{{ params[0] }}</p>
 </template>
 
 <script lang="ts">
@@ -8,6 +8,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 @Component
 export default class DeckCardText extends Vue {
   @Prop() public readonly params!: string[]
+  @Prop() public readonly editable!: boolean
 }
 </script>
 

@@ -251,21 +251,4 @@ export default class DeckCard extends Vue {
   height: 3rem;
   margin-top: -3rem;
 }
-
-[contenteditable="true"] {
-  position: relative;
-}
-[contenteditable="true"]::after {
-  content: ' ';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  border-bottom: 1px dotted white;
-  mix-blend-mode: difference;
-}
-[contenteditable="true"]:focus::after {
-  border-bottom: none;
-}
 </style>

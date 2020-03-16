@@ -1,5 +1,5 @@
 <template>
-  <h4>{{ params[0] }}</h4>
+  <h4 v-editable:0="editable">{{ params[0] }}</h4>
 </template>
 
 <script lang="ts">
@@ -8,6 +8,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 @Component
 export default class DeckCardSection extends Vue {
   @Prop() public readonly params!: string[]
+  @Prop() public readonly editable!: boolean
 }
 </script>
 

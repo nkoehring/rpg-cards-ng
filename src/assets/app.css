@@ -128,3 +128,6 @@ button.edit-pencil {
   border: none;
   cursor: pointer;
 }
+
+[contenteditable="true"] { text-decoration: underline dotted; }
+[contenteditable="true"]:focus { text-decoration: none; }
