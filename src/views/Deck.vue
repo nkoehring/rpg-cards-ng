@@ -70,7 +70,7 @@ export default class DeckView extends Vue {
     count: 1,
     tags: ['foo', 'test'],
     icon: 'robe',
-    contents: [
+    content: [
       { type: 'subtitle', params: ['1st Level Enchantment'] },
       { type: 'rule', params: ['pointing-right'] },
       { type: 'property', params: ['Casting Time', '1 Action'] },
@@ -89,7 +89,7 @@ export default class DeckView extends Vue {
     count: 1,
     tags: ['fire', 'test'],
     icon: 'robe',
-    contents: [
+    content: [
       { type: 'subtitle', params: ['1st Level Evocation'] },
       { type: 'rule', params: ['pointing-right'] },
       { type: 'property', params: ['Casting Time', '1 Action'] },
@@ -109,7 +109,7 @@ export default class DeckView extends Vue {
     count: 1,
     tags: ['wand', 'test'],
     icon: 'robe',
-    contents: [
+    content: [
       { type: 'subtitle', params: ['Wondrous Item'] },
       { type: 'rule', params: ['pointing-right'] },
       { type: 'property', params: ['Maximum charges', '7'] },
@@ -128,7 +128,7 @@ export default class DeckView extends Vue {
     count: 1,
     tags: ['goblin', 'test'],
     icon: 'robe',
-    contents: [
+    content: [
       { type: 'subtitle', params: ['Small humanoid (goblinoid)'] },
       { type: 'rule', params: ['pointing-right'] },
       { type: 'property', params: ['Armor Class', '15 (leather armor)'] },

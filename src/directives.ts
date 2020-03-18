@@ -5,7 +5,6 @@ const eventHandlers: { [key: string]: () => void } = {}
 
 Vue.directive('editable', (el, { value, arg }, vnode) => {
   const keypressHandler = (event: KeyboardEvent) => {
-    console.log('keypress', event.code)
     // allow line break via Shift + Enter
     if (event.keyCode === 13 && !event.shiftKey) {
       event.preventDefault()

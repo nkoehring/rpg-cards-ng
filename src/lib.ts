@@ -45,6 +45,6 @@ export function defaultCard (): Card {
     count: 1,
     tags: [],
     icon: 'robe',
-    contents: []
+    content: []
   }
 }

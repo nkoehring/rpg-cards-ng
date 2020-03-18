@@ -15,12 +15,13 @@
         <button class="edit-close" @click.self.stop="$emit('close')" v-if="isSelection" />
       </header>
       <main>
-        <component v-for="(entry, i) in card.contents"
+        <component v-for="(entry, i) in card.content"
           :is="`deck-card-${entry.type}`"
           :key="`e${i}`"
           :params="entry.params"
           :editable="isSelection"
-          @edit="editContent(i, $event)"
+          @edit="editContentFieldParam(i, $event)"
+          @replace="replaceContentField(i, $event)"
         />
       </main>
     </section>
@@ -89,16 +90,23 @@ export default class DeckCard extends Vue {
     this.$emit('edit', payload)
   }
 
-  private editContent (index: number, event: ContentEditEvent) {
-    const { param, value } = event
-    const field = this.card.contents[index]
-    const newContents = [...this.card.contents]
+  private replaceContentField (index: number, newParams: Field['params']) {
+    const newContent = [...this.card.content]
+    const newField = {
+      type: newContent[index].type,
+      params: newParams
+    }
+    newContent.splice(index, 1, newField)
 
-    field.params[param] = value
-    newContents.splice(index, 1, field)
-
-    const payload = { field: 'contents', value: newContents }
+    const payload = { field: 'content', value: newContent }
     this.$emit('edit', payload)
+  }
+
+  private editContentFieldParam (index: number, event: ContentEditEvent) {
+    const { param, value } = event
+    const params = [...this.card.content[index].params]
+    params[param] = value
+    this.replaceContentField(index, params)
   }
 
   private get icon () {

@@ -1,10 +1,17 @@
-interface Settings {
-  color: string;
+interface Field {
+  type: string;
+  params: (string | number)[];
 }
 
-interface StoredStuff {
-  decks: Deck[];
-  defaults: Settings;
+interface Card {
+  id: string;
+  name: string;
+  count: number;
+  tags: string[];
+  icon: string;
+  content: Field[];
+  backIcon?: string;
+  color?: string;
 }
 
 interface Deck {
@@ -19,18 +26,11 @@ interface Deck {
   titleFontSize?: number;
 }
 
-interface Card {
-  id: string;
-  name: string;
-  count: number;
-  tags: string[];
-  icon: string;
-  contents: CardContent[];
-  backIcon?: string;
-  color?: string;
+interface Settings {
+  color: string;
 }
 
-interface CardContent {
-  type: string;
-  params: (string | number)[];
+interface StoredStuff {
+  decks: Deck[];
+  defaults: Settings;
 }
