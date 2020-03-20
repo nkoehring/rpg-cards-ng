@@ -41,7 +41,7 @@ export default class StorageHandler {
     return null
   }
 
-  private persist () {
+  persist () {
     localStorage.setItem(KEY, JSON.stringify(this.cache))
   }
 }
