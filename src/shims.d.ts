@@ -1,6 +1,16 @@
-interface Field {
+interface TextNode {
+  type: 'text';
+  text: string;
+}
+
+interface SimpleNode {
   type: string;
-  params: (string | number)[];
+}
+
+interface ContentNode {
+  type: string;
+  content: (ContentNode | TextNode | SimpleNode)[];
+  attrs?: object;
 }
 
 interface Card {
@@ -9,7 +19,7 @@ interface Card {
   count: number;
   tags: string[];
   icon: string;
-  content: Field[];
+  content: (ContentNode | SimpleNode)[];
   backIcon?: string;
   color?: string;
 }

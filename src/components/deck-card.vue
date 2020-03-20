@@ -5,31 +5,27 @@
   :class="{ active: isSelection }"
   :style="containerStyle"
   @click="clickUnlessSelected">
+    <div class="active-background" @click.self.stop="$emit('close')" />
+    <button class="action-close" @click.self.stop="$emit('close')" v-if="isSelection" />
     <section name="card-front" class="card-front">
       <header>
-        <h2 :contenteditable="isSelection"
+        <h1 :contenteditable="isSelection"
         @keypress.enter.prevent="editField('name', $event)">
           {{ card.name }}
-        </h2>
+        </h1>
         <img :src="icon" />
-        <button class="edit-close" @click.self.stop="$emit('close')" v-if="isSelection" />
       </header>
       <main>
-        <component v-for="(entry, i) in card.content"
-          :is="`deck-card-${entry.type}`"
-          :key="`e${i}`"
-          :params="entry.params"
-          :editable="isSelection"
-          @edit="editContentFieldParam(i, $event)"
-          @replace="replaceContentField(i, $event)"
-        />
+        <deck-card-editor-menu :editor="editor" />
+        <editor-content :editor="editor" />
       </main>
     </section>
     <section name="card-back" class="card-back">
       <div class="icon-wrapper">
         <img :src="backIcon" />
       </div>
-      <p>click to edit</p>
+      <button @click="$emit('click')">edit card</button>
+      <button @click="$emit('delete')">delete card</button>
     </section>
   </div>
 </template>
@@ -37,43 +33,51 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { cardWHtoStyle, iconPath } from '@/lib'
+import { Editor, EditorContent } from 'tiptap'
+import { Heading, Bold, Italic, HorizontalRule, BulletList, ListItem, History } from 'tiptap-extensions'
+import DeckCardEditorMenu from '@/components/deck-card-editor-menu.vue'
 
-import DeckCardSubtitle from './deck-card-subtitle.vue'
-import DeckCardSection from './deck-card-section.vue'
-import DeckCardRule from './deck-card-rule.vue'
-import DeckCardProperty from './deck-card-property.vue'
-import DeckCardDescription from './deck-card-description.vue'
-import DeckCardText from './deck-card-text.vue'
-import DeckCardNote from './deck-card-note.vue'
-import DeckCardFill from './deck-card-fill.vue'
-import DeckCardBulletList from './deck-card-bullet-list.vue'
-import DeckCardBoxes from './deck-card-boxes.vue'
-import DeckCardDndstats from './deck-card-dndstats.vue'
-
-interface ContentEditEvent {
-  param: number;
-  value: string;
+interface EditorContext {
+  state: object;
+  getHTML: () => string;
+  getJSON: () => ContentNode;
+  transaction: object;
 }
 
+const extensions = [
+  new Heading({ level: [2, 3] }),
+  new Bold(),
+  new Italic(),
+  new HorizontalRule(),
+  new BulletList(),
+  new ListItem(),
+  new History()
+]
+
 @Component({
-  components: {
-    DeckCardSubtitle,
-    DeckCardSection,
-    DeckCardRule,
-    DeckCardProperty,
-    DeckCardDescription,
-    DeckCardText,
-    DeckCardNote,
-    DeckCardFill,
-    DeckCardBulletList,
-    DeckCardBoxes,
-    DeckCardDndstats
-  }
+  components: { EditorContent, DeckCardEditorMenu }
 })
 export default class DeckCard extends Vue {
   @Prop() public readonly card!: Card
   @Prop() public readonly deck!: Deck
   @Prop() public readonly isSelection!: boolean
+
+  private editor = new Editor({ autoFocus: false, extensions })
+
+  private mounted () {
+    this.editor.on('update', ({ getJSON }: EditorContext) => {
+      const doc = getJSON()
+      this.$emit('edit', { field: 'content', value: doc.content })
+    })
+    this.editor.setContent({
+      type: 'doc',
+      content: this.card.content
+    })
+  }
+
+  private beforeDestroy () {
+    this.editor.destroy()
+  }
 
   private editHeadline = false;
   private editFieldIndex: number | null = null;
@@ -88,25 +92,6 @@ export default class DeckCard extends Vue {
     const target = event.target as HTMLElement
     const payload = { field, value: target.innerText }
     this.$emit('edit', payload)
-  }
-
-  private replaceContentField (index: number, newParams: Field['params']) {
-    const newContent = [...this.card.content]
-    const newField = {
-      type: newContent[index].type,
-      params: newParams
-    }
-    newContent.splice(index, 1, newField)
-
-    const payload = { field: 'content', value: newContent }
-    this.$emit('edit', payload)
-  }
-
-  private editContentFieldParam (index: number, event: ContentEditEvent) {
-    const { param, value } = event
-    const params = [...this.card.content[index].params]
-    params[param] = value
-    this.replaceContentField(index, params)
   }
 
   private get icon () {
@@ -126,7 +111,10 @@ export default class DeckCard extends Vue {
       transform: ''
     }
 
-    if (this.isSelection && this.$el) {
+    const selected = this.isSelection
+    const hasElement = this.$el
+
+    if (selected && hasElement) {
       const el = this.$el.getBoundingClientRect()
       const wWidth = window.innerWidth
       const wHeight = window.innerHeight
@@ -158,9 +146,22 @@ export default class DeckCard extends Vue {
   perspective: 600px;
   transition: transform .2s ease-out .4s;
 }
+.flip-card > .active-background {
+  display: none;
+  position: fixed;
+  top: -100vh;
+  left: -100vw;
+  width: 200vw;
+  height: 200vh;
+  background-color: #0008;
+}
 .flip-card.active {
   z-index: 1;
 }
+.flip-card.active > .active-background {
+  display: block;
+}
+
 .card-front, .card-back {
   position: absolute;
   top: 0;
@@ -172,10 +173,7 @@ export default class DeckCard extends Vue {
   transform-style: preserve-3d;
   backface-visibility: hidden;
   transition: transform .4s ease-out;
-  z-index: 0;
-}
-.card-front {
-  z-index: 1;
+  overflow: hidden;
 }
 .flip-card:not(.active):hover > .card-front {
   transform: rotateX(0) rotateY(179deg);
@@ -193,6 +191,7 @@ export default class DeckCard extends Vue {
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
+  z-index: 1;
 }
 .card-front > header {
   display: flex;
@@ -206,16 +205,21 @@ export default class DeckCard extends Vue {
   padding: 0 1em;
   text-align: left;
 }
-.card-front > header > h2 {
-  margin: 0;
-  align-self: end;
+.card-front > header > h1 {
+  margin: .5em 0 0 0;
+  align-self: center;
   line-height: .9em;
+  font-size: 2rem;
 }
 .card-front > header > img {
   height: 3rem;
   align-self: end;
 }
+.card-front > header > h1[contenteditable="true"] { text-decoration: underline dotted; }
+.card-front > header > h1[contenteditable="true"]:focus { text-decoration: none; }
+
 .card-front > main {
+  position: relative;
   display: flex;
   flex-flow: column nowrap;
   flex: 1;
@@ -226,13 +230,6 @@ export default class DeckCard extends Vue {
   border-radius: 1rem;
   font-size: 1.2rem;
   color: black;
-  overflow: hidden;
-}
-.card-front > main > .entry.fill {
-  display: none;
-}
-.card-front > main > .entry.text > span {
-  display: block;
 }
 
 .card-back {
@@ -244,19 +241,78 @@ export default class DeckCard extends Vue {
 .card-back > .icon-wrapper {
   margin: 3em;
 }
-.card-back > p {
-  position: absolute;
-  bottom: -12%;
-  width: 100%;
-  text-align: center;
+.card-back > button {
+  width: 80%;
+  margin: .1rem auto;
 }
 
-.edit-close {
+.action-close {
   position: absolute;
   top: 0;
-  left: calc(25vw + 1.5rem);
+  right: 0;
   width: 3rem;
   height: 3rem;
   margin-top: -3rem;
 }
+
+ @media screen and (orientation:landscape) {
+   .action-close {
+      top: 3rem;
+      right: -3rem;
+   }
+ }
+</style>
+
+<style>
+.ProseMirror p {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.ProseMirror ul {
+  list-style-position: inside;
+  margin: 0;
+  padding-left: .5em;
+}
+.ProseMirror li > p {
+  display: inline;
+}
+
+.ProseMirror h2 {
+  font-size: 1.4rem;
+  color: var(--highlight-color);
+  margin: 0;
+  font-weight: normal;
+}
+
+.ProseMirror h3 {
+  font-size: 1.4rem;
+  color: var(--highlight-color);
+  margin: 0 0 .2em 0;
+  font-weight: normal;
+  font-variant: small-caps;
+  line-height: .9em;
+  border-bottom: 1px solid var(--highlight-color);
+}
+
+.ProseMirror hr {
+  height: 0;
+  margin: .2em 0;
+  border: 2px solid var(--highlight-color);
+}
+.ProseMirror hr.pointing-right {
+  height: 0;
+  margin: .2em 0;
+  border-style: solid;
+  border-width: 2px 0 2px 220px;
+  border-color: transparent transparent transparent var(--highlight-color);
+}
+.ProseMirror hr.pointing-left {
+  height: 0;
+  margin: .2em 0;
+  border-style: solid;
+  border-width: 2px 220px 2px 0;
+  border-color: transparent var(--highlight-color) transparent transparent;
+}
+[contenteditable="true"] { outline: none; }
 </style>

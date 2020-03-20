@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from './views/Home.vue'
-import DeckView from './views/Deck.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +13,7 @@ const routes = [
   {
     path: '/deck/:id',
     name: 'Deck',
-    component: DeckView
+    component: () => import(/* webpackChunkName "deck" */ './views/Deck.vue')
   },
   {
     path: '/about',

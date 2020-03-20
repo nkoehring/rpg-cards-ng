@@ -86,6 +86,9 @@ input, button, select {
 input {
   padding: 0 .7em;
 }
+button {
+  cursor: pointer;
+}
 select {
   padding: 0 .5em;
 }
@@ -117,17 +120,9 @@ a { color: inherit; text-decoration: inherit; }
   box-shadow: 0 0 2rem 0 #A44;
 }
 
-button.edit-close {
+button.action-close {
   background: white url(./zondicons/close-outline.svg) center no-repeat;
   border: 1px solid white;
   border-radius: 1em;
   cursor: pointer;
 }
-button.edit-pencil {
-  background: transparent url(./zondicons/edit-pencil.svg) center no-repeat;
-  border: none;
-  cursor: pointer;
-}
-
-[contenteditable="true"] { text-decoration: underline dotted; }
-[contenteditable="true"]:focus { text-decoration: none; }
