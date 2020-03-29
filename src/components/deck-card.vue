@@ -34,7 +34,20 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { cardWHtoStyle, iconPath } from '@/lib'
 import { Editor, EditorContent } from 'tiptap'
-import { Heading, Bold, Italic, HorizontalRule, BulletList, ListItem, History } from 'tiptap-extensions'
+import {
+  Heading,
+  Bold,
+  Italic,
+  HorizontalRule,
+  BulletList,
+  ListItem,
+  History,
+  Table,
+  TableCell,
+  TableRow,
+  TableHeader
+} from 'tiptap-extensions'
+import StatBlock from '@/editor/stat-block.js'
 import DeckCardEditorMenu from '@/components/deck-card-editor-menu.vue'
 
 interface EditorContext {
@@ -51,7 +64,8 @@ const extensions = [
   new HorizontalRule(),
   new BulletList(),
   new ListItem(),
-  new History()
+  new History(),
+  new StatBlock()
 ]
 
 @Component({
