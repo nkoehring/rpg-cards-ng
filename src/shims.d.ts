@@ -1,3 +1,7 @@
+interface KV<V> {
+  [key: string]: V;
+}
+
 interface TextNode {
   type: 'text';
   text: string;
