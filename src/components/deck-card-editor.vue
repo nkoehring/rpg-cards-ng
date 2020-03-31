@@ -1,0 +1,184 @@
+<template>
+  <main>
+    <deck-card-editor-menu
+      :active="contentInFocus"
+      @action="editorAction"
+      v-model="menuState"
+    />
+
+    <div
+      :ref="content"
+      class="card-content"
+      :contenteditable="active"
+      @focus="start"
+      @click="syncMenuStateIfFocussed"
+      @keyup="syncMenuStateOnKeyPress"
+      @blur="stop"
+    >
+      <h2>card content</h2>
+      <hr />
+      <p><b>foo:</b> boom</p>
+      <p><b>bar:</b> blam</p>
+      <hr />
+      <p>Some description maybe?</p>
+    </div>
+  </main>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import DeckCardEditorMenu from '@/components/deck-card-editor-menu.vue'
+import {
+  elementNameToMenuState,
+  getElementAndParentName,
+  marks,
+  blocks,
+  State,
+  movementKeys,
+  controlSequenceKeys
+} from '@/editor.ts'
+
+@Component({
+  components: { DeckCardEditorMenu }
+})
+export default class DeckCardEditor extends Vue {
+  @Prop() public readonly active!: boolean
+  @Prop() public readonly content!: Card['content']
+
+  private contentInFocus = false
+
+  private menuState: State = {
+    bold: false,
+    italic: false,
+    paragraph: true,
+    heading1: false,
+    heading2: false,
+    heading3: false,
+    bulletList: false,
+    spacer: false,
+    separator: false,
+    statBlock: false
+  }
+
+  private clearMarks () {
+    marks.forEach(mark => {
+      this.menuState[mark] = false
+    })
+  }
+
+  private toggleBlock (name: string) {
+    blocks.forEach(block => {
+      this.menuState[block] = false
+    })
+    this.menuState[name] = true
+  }
+
+  private setMenuState (elementName: string, parentName?: string) {
+    const stateName = elementNameToMenuState[elementName]
+
+    // marks are always inside a block element
+    if (marks.indexOf(stateName) >= 0 && parentName) {
+      const parentStateName = elementNameToMenuState[parentName]
+      // marks are inclusive like checkboxes
+      this.menuState[stateName] = true
+      // but blocks are exclusive like radio buttons
+      this.toggleBlock(parentStateName)
+    } else {
+      this.clearMarks()
+      this.toggleBlock(stateName)
+    }
+  }
+
+  private editorAction (action: string) {
+    console.log('action', action)
+    // const content = this.$refs.content
+  }
+
+  private syncMenuState () {
+    const sel = window.getSelection()?.focusNode
+    if (!sel) return
+
+    const [elementName, parentName] = getElementAndParentName(sel)
+    console.log('focussed element', elementName, parentName)
+    if (!elementName) return
+
+    this.setMenuState(elementName, parentName)
+  }
+
+  private syncMenuStateIfFocussed () {
+    if (this.contentInFocus) this.syncMenuState()
+  }
+
+  private syncMenuStateOnKeyPress (event: KeyboardEvent) {
+    // undo/redo/cut/paste
+    const isCtrlSq = event.ctrlKey && controlSequenceKeys.indexOf(event.key) >= 0
+    // arrow keys, enter, delete, etc
+    const isMove = movementKeys.indexOf(event.key) >= 0
+
+    if (isCtrlSq || isMove) this.syncMenuState()
+  }
+
+  private start () {
+    this.contentInFocus = true
+    this.syncMenuState()
+  }
+
+  private stop () {
+    this.contentInFocus = false
+  }
+}
+</script>
+
+<style scoped>
+.card-content p {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.card-content ul {
+  list-style-position: inside;
+  margin: 0;
+  padding-left: .5em;
+}
+.card-content li > p {
+  display: inline;
+}
+
+.card-content h2 {
+  font-size: 1.4rem;
+  color: var(--highlight-color);
+  margin: 0;
+  font-weight: normal;
+}
+
+.card-content h3 {
+  font-size: 1.4rem;
+  color: var(--highlight-color);
+  margin: 0 0 .2em 0;
+  font-weight: normal;
+  font-variant: small-caps;
+  line-height: .9em;
+  border-bottom: 1px solid var(--highlight-color);
+}
+
+.card-content hr {
+  height: 0;
+  margin: .2em 0;
+  border: 2px solid var(--highlight-color);
+}
+.card-content hr.pointing-right {
+  height: 0;
+  margin: .2em 0;
+  border-style: solid;
+  border-width: 2px 0 2px 220px;
+  border-color: transparent transparent transparent var(--highlight-color);
+}
+.card-content hr.pointing-left {
+  height: 0;
+  margin: .2em 0;
+  border-style: solid;
+  border-width: 2px 220px 2px 0;
+  border-color: transparent var(--highlight-color) transparent transparent;
+}
+[contenteditable="true"] { outline: none; }
+</style>

@@ -86,7 +86,6 @@ export default class DeckView extends Vue {
     if (this.deck === null) return
 
     const newCard = defaultCard()
-    newCard.name = 'Click here to add an awesome title'
     newCard.content = [{
       type: 'heading',
       attrs: { level: 2 },

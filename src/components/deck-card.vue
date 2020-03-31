@@ -10,15 +10,13 @@
     <section name="card-front" class="card-front">
       <header>
         <h1 :contenteditable="isSelection"
+        @blur="editField('name', $event)"
         @keypress.enter.prevent="editField('name', $event)">
           {{ card.name }}
         </h1>
         <img :src="icon" />
       </header>
-      <main>
-        <deck-card-editor-menu :editor="editor" />
-        <editor-content :editor="editor" />
-      </main>
+      <deck-card-editor :active="isSelection" :content="card.content" @input="$emit('edit', $event)" />
     </section>
     <section name="card-back" class="card-back">
       <div class="icon-wrapper">
@@ -33,65 +31,18 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { cardWHtoStyle, iconPath } from '@/lib'
-import { Editor, EditorContent } from 'tiptap'
-import {
-  Heading,
-  Bold,
-  Italic,
-  HorizontalRule,
-  BulletList,
-  ListItem,
-  History,
-  Table,
-  TableCell,
-  TableRow,
-  TableHeader
-} from 'tiptap-extensions'
-import StatBlock from '@/editor/stat-block.js'
-import DeckCardEditorMenu from '@/components/deck-card-editor-menu.vue'
-
-interface EditorContext {
-  state: object;
-  getHTML: () => string;
-  getJSON: () => ContentNode;
-  transaction: object;
-}
-
-const extensions = [
-  new Heading({ level: [2, 3] }),
-  new Bold(),
-  new Italic(),
-  new HorizontalRule(),
-  new BulletList(),
-  new ListItem(),
-  new History(),
-  new StatBlock()
-]
+import DeckCardEditor from '@/components/deck-card-editor.vue'
 
 @Component({
-  components: { EditorContent, DeckCardEditorMenu }
+  components: { DeckCardEditor }
 })
 export default class DeckCard extends Vue {
   @Prop() public readonly card!: Card
   @Prop() public readonly deck!: Deck
   @Prop() public readonly isSelection!: boolean
 
-  private editor = new Editor({ autoFocus: false, extensions })
-
-  private mounted () {
-    this.editor.on('update', ({ getJSON }: EditorContext) => {
-      const doc = getJSON()
-      this.$emit('edit', { field: 'content', value: doc.content })
-    })
-    this.editor.setContent({
-      type: 'doc',
-      content: this.card.content
-    })
-  }
-
-  private beforeDestroy () {
-    this.editor.destroy()
-  }
+  /// TODO: onEdit
+  // this.$emit('edit', { field: 'content', value: doc.content })
 
   private editHeadline = false;
   private editFieldIndex: number | null = null;
@@ -275,58 +226,4 @@ export default class DeckCard extends Vue {
       right: -3rem;
    }
  }
-</style>
-
-<style>
-.ProseMirror p {
-  margin: 0;
-  line-height: 1.2;
-}
-
-.ProseMirror ul {
-  list-style-position: inside;
-  margin: 0;
-  padding-left: .5em;
-}
-.ProseMirror li > p {
-  display: inline;
-}
-
-.ProseMirror h2 {
-  font-size: 1.4rem;
-  color: var(--highlight-color);
-  margin: 0;
-  font-weight: normal;
-}
-
-.ProseMirror h3 {
-  font-size: 1.4rem;
-  color: var(--highlight-color);
-  margin: 0 0 .2em 0;
-  font-weight: normal;
-  font-variant: small-caps;
-  line-height: .9em;
-  border-bottom: 1px solid var(--highlight-color);
-}
-
-.ProseMirror hr {
-  height: 0;
-  margin: .2em 0;
-  border: 2px solid var(--highlight-color);
-}
-.ProseMirror hr.pointing-right {
-  height: 0;
-  margin: .2em 0;
-  border-style: solid;
-  border-width: 2px 0 2px 220px;
-  border-color: transparent transparent transparent var(--highlight-color);
-}
-.ProseMirror hr.pointing-left {
-  height: 0;
-  margin: .2em 0;
-  border-style: solid;
-  border-width: 2px 220px 2px 0;
-  border-color: transparent var(--highlight-color) transparent transparent;
-}
-[contenteditable="true"] { outline: none; }
 </style>

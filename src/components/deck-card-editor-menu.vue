@@ -1,49 +1,43 @@
 <template>
-  <editor-menu-bar :editor="editor" v-slot="{ commands, isActive, focused }">
-    <div class="menu-bar" :class="{ active: focused }">
-      <button class="editor-button-bold" :class="{ active: active.bold }" @click="menuAction('bold', commands.bold, isActive)" />
-      <button class="editor-button-italic" :class="{ active: active.italic }" @click="menuAction('italic', commands.italic, isActive)" />
+  <div class="menu-bar" :class="{ active }">
+    <button class="editor-button-bold" :class="{ active: value.bold }" @click="menuAction('bold')" />
+    <button class="editor-button-italic" :class="{ active: value.italic }" @click="menuAction('italic')" />
 
-      <button class="editor-button-paragraph" :class="{ active: active.paragraph }" @click="menuAction('paragraph', commands.paragraph, isActive)" />
-      <button class="editor-button-heading2" :class="{ active: active.heading2 }" @click="menuAction('heading2', commands.heading({ level: 2}), isActive)" />
-      <button class="editor-button-heading3" :class="{ active: active.heading3 }" @click="menuAction('heading3', commands.heading({ level: 3}), isActive)" />
+    <button class="editor-button-paragraph" :class="{ active: value.paragraph }" @click="menuAction('paragraph')" />
+    <button class="editor-button-heading2" :class="{ active: value.heading2 }" @click="menuAction('heading2')" />
+    <button class="editor-button-heading3" :class="{ active: value.heading3 }" @click="menuAction('heading3')" />
 
-      <button class="editor-button-bullet-list" :class="{ active: active.bullet_list }" @click="menuAction('bullet_list', commands.bullet_list, isActive)" />
-      <button class="editor-button-horizontal-rule" :class="{ active: active.horizontal_rule }" @click="menuAction('horizontal_rule', commands.horizontal_rule, isActive)" />
+    <button class="editor-button-bullet-list" :class="{ active: value.bulletList }" @click="menuAction('bulletList')" />
+    <button class="editor-button-horizontal-rule" :class="{ active: value.separator}" @click="menuAction('separator')" />
+    <button class="editor-button-horizontal-rule" :class="{ active: value.spacer}" @click="menuAction('spacer')" />
 
-      <button class="editor-button-stat-block" :class="{ active: active.stat_block }" @click="menuAction('stat_block', commands.stat_block, isActive)" />
-    </div>
-  </editor-menu-bar>
+    <button class="editor-button-stat-block" :class="{ active: value.statBlock }" @click="menuAction('statBlock')" />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Editor, EditorMenuBar } from 'tiptap'
+import { blocks, State } from '@/editor.ts'
 
-@Component({
-  components: { EditorMenuBar }
-})
+@Component
 export default class DeckCardEditorMenu extends Vue {
-  @Prop() public readonly editor!: Editor
+  @Prop() public readonly active!: boolean
+  @Prop() public readonly value!: State
 
-  private active: {[key: string]: boolean} = {
-    bold: false,
-    italic: false,
+  private menuAction (name: string) {
+    const newState = { ...this.value }
 
-    paragraph: false,
-    heading2: false,
-    heading3: false,
+    if (blocks.indexOf(name) >= 0) { // blocks behave like radio buttons
+      blocks.forEach(block => {
+        newState[block] = false
+      })
+      newState[name] = true
+    } else { // marks behave like checkboxes
+      newState[name] = !newState[name]
+    }
 
-    bulletList: false,
-    horizontalLule: false
-  }
-
-  private menuAction (name: string, command: () => void, isActive: {[key: string]: () => boolean}) {
-    command()
-
-    Object.keys(this.active).forEach(action => {
-      this.active[action] = isActive[action]()
-    })
+    this.$emit('input', newState)
+    this.$emit('action', name)
   }
 }
 </script>

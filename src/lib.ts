@@ -41,7 +41,7 @@ export function defaultDeck (): Deck {
 export function defaultCard (): Card {
   return {
     id: `c${randomId()}`,
-    name: '',
+    name: 'no title yet',
     count: 1,
     tags: [],
     icon: 'robe',
