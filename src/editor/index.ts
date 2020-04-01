@@ -1,8 +1,9 @@
+import { elementNameToMenuState, marks, blocks } from './constants'
+
 export type State = KV<boolean>
 export {
   movementKeys,
   controlSequenceKeys,
-  elementNameToMenuState,
   marks,
   blocks
 } from './constants'
@@ -33,10 +34,41 @@ export const menuActionToCommand: KV<() => boolean> = {
   italic: simpleAction('italic')
 }
 
-export function getElementAndParentName (el: Node) {
-  const element = el.nodeName === '#text' ? el.parentElement : el
-  return [
-    element?.nodeName,
-    element?.parentElement?.nodeName
-  ]
+export function getActiveMarksAndBlocks (el: HTMLElement): {
+  marks: string[];
+  block: string;
+} {
+  let activeBlock = 'paragraph'
+  const activeMarks: string[] = []
+
+  const focussedEl = el.nodeName === '#text' ? el.parentElement : el
+  if (!focussedEl) return { marks: activeMarks, block: activeBlock }
+
+  const focussedState = elementNameToMenuState[focussedEl.nodeName]
+  if (!focussedState) return { marks: activeMarks, block: activeBlock }
+
+  if (blocks.indexOf(focussedState) >= 0) {
+    activeBlock = focussedState
+    return { marks: activeMarks, block: activeBlock }
+  }
+
+  let wrappingEl = focussedEl.parentElement
+  let wrappingState: string
+
+  if (marks.indexOf(focussedState) >= 0) {
+    activeMarks.push(focussedState)
+
+    while (wrappingEl) {
+      wrappingState = elementNameToMenuState[wrappingEl.nodeName]
+      if (marks.indexOf(wrappingState) < 0) {
+        if (blocks.indexOf(wrappingState) >= 0) activeBlock = wrappingState
+        break
+      }
+
+      activeMarks.push(wrappingState)
+      wrappingEl = wrappingEl.parentElement
+    }
+  }
+
+  return { marks: activeMarks, block: activeBlock }
 }

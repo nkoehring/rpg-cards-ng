@@ -29,11 +29,8 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import DeckCardEditorMenu from '@/components/deck-card-editor-menu.vue'
 import {
-  elementNameToMenuState,
   menuActionToCommand,
-  getElementAndParentName,
-  marks,
-  blocks,
+  getActiveMarksAndBlocks,
   State,
   movementKeys,
   controlSequenceKeys
@@ -48,45 +45,33 @@ export default class DeckCardEditor extends Vue {
 
   private contentInFocus = false
 
-  private menuState: State = {
-    bold: false,
-    italic: false,
-    paragraph: true,
-    heading1: false,
-    heading2: false,
-    heading3: false,
-    bulletList: false,
-    spacer: false,
-    separator: false,
-    statBlock: false
+  private defaultMenuState (): State {
+    return {
+      bold: false,
+      italic: false,
+      paragraph: true,
+      heading1: false,
+      heading2: false,
+      heading3: false,
+      bulletList: false,
+      spacer: false,
+      separator: false,
+      statBlock: false
+    }
   }
 
-  private clearMarks () {
-    marks.forEach(mark => {
-      this.menuState[mark] = false
-    })
+  private menuState = this.defaultMenuState()
+
+  private resetMenuState () {
+    this.menuState = this.defaultMenuState()
   }
 
-  private toggleBlock (name: string) {
-    blocks.forEach(block => {
-      this.menuState[block] = false
-    })
-    this.menuState[name] = true
-  }
-
-  private setMenuState (elementName: string, parentName?: string) {
-    const stateName = elementNameToMenuState[elementName]
-
-    // marks are always inside a block element
-    if (marks.indexOf(stateName) >= 0 && parentName) {
-      const parentStateName = elementNameToMenuState[parentName]
-      // marks are inclusive like checkboxes
-      this.menuState[stateName] = true
-      // but blocks are exclusive like radio buttons
-      this.toggleBlock(parentStateName)
-    } else {
-      this.clearMarks()
-      this.toggleBlock(stateName)
+  private setMenuState (marks: string[], block: string) {
+    this.resetMenuState()
+    marks.forEach(mark => { this.menuState[mark] = true })
+    if (block !== 'paragraph') {
+      this.menuState.paragraph = false
+      this.menuState[block] = true
     }
   }
 
@@ -105,11 +90,8 @@ export default class DeckCardEditor extends Vue {
     const sel = window.getSelection()?.focusNode
     if (!sel) return
 
-    const [elementName, parentName] = getElementAndParentName(sel)
-    console.log('focussed element', elementName, parentName)
-    if (!elementName) return
-
-    this.setMenuState(elementName, parentName)
+    const { marks, block } = getActiveMarksAndBlocks(sel as HTMLElement)
+    this.setMenuState(marks, block)
   }
 
   private syncMenuStateIfFocussed () {
