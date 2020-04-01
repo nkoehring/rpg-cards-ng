@@ -28,7 +28,9 @@ export const menuActionToCommand: KV<() => boolean> = {
   heading3: simpleAction('formatblock', 'H3'),
   bulletList: simpleAction('insertUnorderedList'),
   numberedList: simpleAction('insertOrderedList'),
-  separator: insertHorizontalRule()
+  separator: insertHorizontalRule(),
+  bold: simpleAction('bold'),
+  italic: simpleAction('italic')
 }
 
 export function getElementAndParentName (el: Node) {
