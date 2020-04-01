@@ -1,5 +1,3 @@
-export type State = KV<boolean>
-
 export const movementKeys = [
   'ArrowLeft',
   'ArrowRight',
@@ -37,11 +35,3 @@ export const blocks = [
   'separator',
   'statBlock'
 ]
-
-export function getElementAndParentName (el: Node) {
-  const element = el.nodeName === '#text' ? el.parentElement : el
-  return [
-    element?.nodeName,
-    element?.parentElement?.nodeName
-  ]
-}

@@ -7,7 +7,7 @@
     />
 
     <div
-      :ref="content"
+      ref="content"
       class="card-content"
       :contenteditable="active"
       @focus="start"
@@ -30,13 +30,14 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import DeckCardEditorMenu from '@/components/deck-card-editor-menu.vue'
 import {
   elementNameToMenuState,
+  menuActionToCommand,
   getElementAndParentName,
   marks,
   blocks,
   State,
   movementKeys,
   controlSequenceKeys
-} from '@/editor.ts'
+} from '@/editor'
 
 @Component({
   components: { DeckCardEditorMenu }
@@ -91,7 +92,13 @@ export default class DeckCardEditor extends Vue {
 
   private editorAction (action: string) {
     console.log('action', action)
-    // const content = this.$refs.content
+    const content = this.$refs.content as HTMLElement
+    content.focus()
+
+    const cmd = menuActionToCommand[action]
+    cmd()
+
+    this.$nextTick(() => this.syncMenuState())
   }
 
   private syncMenuState () {
@@ -121,6 +128,8 @@ export default class DeckCardEditor extends Vue {
   private start () {
     this.contentInFocus = true
     this.syncMenuState()
+    // insert paragraphs instead of DIVs on enter
+    document.execCommand('defaultParagraphSeparator', false, 'p')
   }
 
   private stop () {
@@ -129,7 +138,7 @@ export default class DeckCardEditor extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
 .card-content p {
   margin: 0;
   line-height: 1.2;
