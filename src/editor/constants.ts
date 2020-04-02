@@ -5,7 +5,11 @@ export const movementKeys = [
   'ArrowDown',
   'Delete',
   'Backspace',
-  'Enter'
+  'Enter',
+  'Home',
+  'End',
+  'PageUp',
+  'PageDown'
 ]
 
 export const controlSequenceKeys = ['p', 'x', 'y', 'z', 'Z']
