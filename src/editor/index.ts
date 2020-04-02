@@ -1,5 +1,18 @@
 import { elementNameToMenuState, marks, blocks } from './constants'
 
+export {
+  isRootNode,
+  isRootChild,
+  isElementNode,
+  isTextNode,
+  isEmptyTextNode
+} from './node'
+
+export {
+  moveCaretToBOL,
+  moveCaretToEOL
+} from './caret'
+
 export type State = KV<boolean>
 export {
   movementKeys,
@@ -14,14 +27,6 @@ function simpleAction (cmd: string, arg?: string): () => boolean {
   }
 }
 
-function insertHorizontalRule (): () => boolean {
-  return () => {
-    const hr = document.execCommand('insertHorizontalRule')
-    const p = document.execCommand('formatblock', false, 'P')
-    return hr && p
-  }
-}
-
 export const menuActionToCommand: KV<() => boolean> = {
   paragraph: simpleAction('formatblock', 'P'),
   heading1: simpleAction('formatblock', 'H1'),
@@ -29,7 +34,7 @@ export const menuActionToCommand: KV<() => boolean> = {
   heading3: simpleAction('formatblock', 'H3'),
   bulletList: simpleAction('insertUnorderedList'),
   numberedList: simpleAction('insertOrderedList'),
-  separator: insertHorizontalRule(),
+  separator: simpleAction('insertHorizontalRule'),
   bold: simpleAction('bold'),
   italic: simpleAction('italic')
 }
