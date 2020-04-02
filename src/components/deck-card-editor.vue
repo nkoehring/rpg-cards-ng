@@ -33,7 +33,10 @@ import {
   getActiveMarksAndBlocks,
   State,
   movementKeys,
-  controlSequenceKeys
+  controlSequenceKeys,
+  isRootNode,
+  isTextNode,
+  moveCaretToEOL
 } from '@/editor'
 
 @Component({
@@ -76,7 +79,6 @@ export default class DeckCardEditor extends Vue {
   }
 
   private editorAction (action: string) {
-    console.log('action', action)
     const content = this.$refs.content as HTMLElement
     content.focus()
 
@@ -104,7 +106,27 @@ export default class DeckCardEditor extends Vue {
     // arrow keys, enter, delete, etc
     const isMove = movementKeys.indexOf(event.key) >= 0
 
-    if (isCtrlSq || isMove) this.syncMenuState()
+    if (isCtrlSq || isMove) {
+      return this.syncMenuState()
+    } else if (!event.ctrlKey && event.key.length === 1) {
+      // this should capture all normal typable letters and numbers
+      // TODO: this needs to be done on text pasting as well
+
+      // some browsers create bogus root level text nodes, so whenever
+      // something is typed in such a root level node, we simply wrap it with
+      // a paragraph
+      const sel = window.getSelection()?.focusNode
+      if (sel && isTextNode(sel) && isRootNode(sel.parentElement as HTMLElement)) {
+        console.debug(`Typed letter "${event.key} into root node, throwing a <p> at it!"`)
+        document.execCommand('formatblock', false, 'P')
+
+        // Firefox behaves nicely and leaves the caret alone after surrounding
+        // the text node with a <p>. Unlike Chromium that moves the caret to
+        // the beginning of the new paragraph. To mitigate that, we set the
+        // caret to end-of-line manually.
+        moveCaretToEOL()
+      }
+    }
   }
 
   private start () {
