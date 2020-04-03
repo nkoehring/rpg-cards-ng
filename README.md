@@ -1,5 +1,7 @@
 # rpg-cards-ng
 
+**Try the super extra pre alpha version here:** https://rpg-cards-ng.netlify.com/
+
 ![Decks Overview](https://raw.githubusercontent.com/nkoehring/rpg-cards-ng/master/docs/scrot.jpg)
 
 ![Deck Example](https://raw.githubusercontent.com/nkoehring/rpg-cards-ng/master/docs/scrot2.jpg)
