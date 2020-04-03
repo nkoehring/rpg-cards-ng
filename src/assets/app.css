@@ -46,7 +46,6 @@ html,body {
 
 header {
   display: block;
-  height: 10rem;
   font-size: 2rem;
   line-height: 2rem;
   padding: 4rem 0;
@@ -54,6 +53,13 @@ header {
 }
 header > p {
   opacity: .6;
+}
+section[name=notifications] {
+  display: block;
+  max-width: 70rem;
+  margin: 0 auto 1em;
+  padding: 1rem 3rem;
+  border: .5em solid red;
 }
 
 #popup {

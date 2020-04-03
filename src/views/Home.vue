@@ -1,6 +1,14 @@
 <template>
   <main name="home" :class="{ popup }">
     <header>RPG Cards for y'all</header>
+    <section name="notifications">
+      <p class="warning">
+        <strong>This is a pre-alpha version.</strong>
+        Many features are still unstable or completely missing.
+        <br />
+        Check out <a href="https://github.com/nkoehring/rpg-cards-ng/">the code repository</a> for more information.
+      </p>
+    </section>
     <section name="deck-covers" class="cards" :class="{ centered: !savedDecks.length }">
       <router-link :to="{ name: 'Deck', params: { id: deck.id } }" :key="deck.id" v-for="deck in savedDecks">
         <deck-cover :deck="deck" />
