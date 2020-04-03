@@ -5,12 +5,14 @@ export {
   isRootChild,
   isElementNode,
   isTextNode,
-  isEmptyTextNode
+  isEmptyTextNode,
+  getFocussedNode
 } from './node'
 
 export {
   moveCaretToBOL,
-  moveCaretToEOL
+  moveCaretToEOL,
+  selectLine
 } from './caret'
 
 export type State = KV<boolean>
