@@ -1,5 +1,7 @@
 const { TEXT_NODE, ELEMENT_NODE } = Node
-
+export function getFocussedNode (): Node | null {
+  return window.getSelection()?.focusNode || null
+}
 export function isTextNode ({ nodeType }: Node): boolean {
   return nodeType === TEXT_NODE
 }
