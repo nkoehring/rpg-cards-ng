@@ -1,5 +1,5 @@
 <template>
-  <div class="menu-bar" :class="{ active }">
+  <menu class="menu-bar" :class="{ active }">
     <button class="editor-button-bold" :class="{ active: value.bold }" @click="menuAction('bold')" />
     <button class="editor-button-italic" :class="{ active: value.italic }" @click="menuAction('italic')" />
 
@@ -9,20 +9,26 @@
 
     <button class="editor-button-bullet-list" :class="{ active: value.bulletList }" @click="menuAction('bulletList')" />
     <button class="editor-button-horizontal-rule" :class="{ active: value.separator}" @click="menuAction('separator')" />
-    <button class="editor-button-horizontal-rule" :class="{ active: value.spacer}" @click="menuAction('spacer')" />
 
-    <button class="editor-button-stat-block" :class="{ active: value.statBlock }" @click="menuAction('statBlock')" />
-  </div>
+    <button class="editor-button-dropdown" :class="{ active: dropdownOpen }" @click="toggleDropdown" />
+
+    <div class="extended-menu" v-show="dropdownOpen">
+      <button class="extended-menu-button" @click="extMenuAction('statBlock')">Stat Block (DnD5e)</button>
+      <button class="extended-menu-button" @click="extMenuAction('boxes')">Empty Boxes</button>
+    </div>
+  </menu>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { blocks, State } from '@/editor'
+import { blocks, marks, State } from '@/editor'
 
 @Component
 export default class DeckCardEditorMenu extends Vue {
   @Prop() public readonly active!: boolean
   @Prop() public readonly value!: State
+
+  private dropdownOpen = false
 
   private menuAction (name: string) {
     const newState = { ...this.value }
@@ -32,12 +38,22 @@ export default class DeckCardEditorMenu extends Vue {
         newState[block] = false
       })
       newState[name] = true
-    } else { // marks behave like checkboxes
+    } else if (marks.indexOf(name)) { // marks behave like checkboxes
       newState[name] = !newState[name]
     }
 
     this.$emit('input', newState)
     this.$emit('action', name)
+  }
+
+  private toggleDropdown () {
+    this.dropdownOpen = !this.dropdownOpen
+    this.$emit('action', 'refocus')
+  }
+
+  private extMenuAction (name: string) {
+    this.menuAction(name)
+    this.dropdownOpen = false
   }
 }
 </script>
@@ -92,4 +108,29 @@ export default class DeckCardEditorMenu extends Vue {
 .editor-button-horizontal-rule:after { content: '—'; }
 
 .editor-button-stat-block:after { content: 'ST'; }
+
+.menu-bar > button.editor-button-dropdown {
+  width: 3.6rem;
+}
+.menu-bar > button.editor-button-dropdown:after {
+  content: ' more ';
+  width: 90%;
+  font-size: 1rem;
+}
+
+.extended-menu {
+  width: 100%;
+  height: 4rem;
+  padding-top: .5rem;
+  background: var(--highlight-color);
+}
+.extended-menu-button {
+  width: 97%;
+  height: 1.6rem;
+  margin: 0 .1rem;
+  background-color: #EEE;
+  color: black;
+  font-size: 1rem;
+  border: none;
+}
 </style>

@@ -83,7 +83,7 @@ export default class DeckCardEditor extends Vue {
     content.focus()
 
     const cmd = menuActionToCommand[action]
-    cmd()
+    if (cmd) cmd()
 
     this.$nextTick(() => this.syncMenuState())
   }
