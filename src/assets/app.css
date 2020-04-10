@@ -132,3 +132,7 @@ button.action-close {
   border-radius: 1em;
   cursor: pointer;
 }
+
+.codex-editor--narrow .codex-editor__redactor {
+  margin-right: 0;
+}
