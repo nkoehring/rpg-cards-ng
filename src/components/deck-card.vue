@@ -10,14 +10,18 @@
     <section name="card-front" class="card-front">
       <header>
         <h1 :contenteditable="isSelection"
-        @focus="selectLine"
         @blur="editField('name', $event)"
         @keypress.enter.prevent="editField('name', $event)">
           {{ card.name }}
         </h1>
         <img :src="icon" />
       </header>
-      <deck-card-editor :active="isSelection" :content="card.content" @input="$emit('edit', $event)" />
+      <deck-card-editor
+        :card-id="card.id"
+        :active="isSelection"
+        :content="card.content"
+        @input="$emit('edit', $event)"
+      />
     </section>
     <section name="card-back" class="card-back">
       <div class="icon-wrapper">
@@ -33,7 +37,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { cardWHtoStyle, iconPath } from '@/lib'
 import DeckCardEditor from '@/components/deck-card-editor.vue'
-import { selectLine } from '@/editor'
 
 @Component({
   components: { DeckCardEditor }
@@ -103,10 +106,6 @@ export default class DeckCard extends Vue {
     }
 
     return style
-  }
-
-  private selectLine () {
-    selectLine()
   }
 }
 </script>
@@ -201,6 +200,7 @@ export default class DeckCard extends Vue {
   border-radius: 1rem;
   font-size: 1.2rem;
   color: black;
+  overflow: hidden;
 }
 
 .card-back {
