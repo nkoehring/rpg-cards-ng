@@ -9,6 +9,10 @@ import icon5 from '../assets/editor/header5.svg.txt'
 import icon6 from '../assets/editor/header6.svg.txt'
 const title = 'Heading'
 
+interface PasteConfig {
+  tags: string[];
+}
+
 enum HeadingLevel {
   One = 1,
   Two = 2,
@@ -153,7 +157,7 @@ class Heading extends BlockToolExt {
 
   // Used by Editor.js paste handling API.
   // Provides configuration to handle H1-H6 tags.
-  static get pasteConfig () {
+  static get pasteConfig (): PasteConfig {
     return {
       tags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6']
     }
