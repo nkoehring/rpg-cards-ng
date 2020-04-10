@@ -1,12 +1,16 @@
 import { BlockTool, BlockToolData, ToolConfig, ToolboxConfig, API } from '@editorjs/editorjs'
 
+interface BlockToolConfig extends ToolConfig {
+  [key: string]: string;
+}
+
 export interface BlockToolArgs {
   api: API;
-  config: ToolConfig;
+  config: BlockToolConfig;
   data?: BlockToolData;
 }
 
-export class BlockToolExt implements BlockTool {
+export class ContentlessBlock implements BlockTool {
   protected api: API
   protected _element: HTMLElement
   protected _data: object
@@ -42,4 +46,4 @@ export class BlockToolExt implements BlockTool {
   }
 }
 
-export default BlockToolExt
+export default ContentlessBlock

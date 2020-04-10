@@ -7,7 +7,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 import Editor from '@editorjs/editorjs'
 import List from '@editorjs/list'
-import { Heading, Delimiter } from '@/editor'
+import { /* Heading, */ Delimiter, Boop } from '@/editor'
 
 @Component
 export default class DeckCardEditor extends Vue {
@@ -26,9 +26,10 @@ export default class DeckCardEditor extends Vue {
       holderId: this.id,
       autofocus: false,
       tools: {
-        header: Heading,
-        list: List,
-        delimiter: Delimiter
+        // header: Heading,
+        list: { class: List, inlineToolbar: true },
+        delimiter: { class: Delimiter, inlineToolbar: true },
+        boop: { class: Boop, inlineToolbar: true }
       },
       // data: {},
       placeholder: 'Click here to write your card.'

@@ -1,13 +1,9 @@
 import { ToolConstructable } from '@editorjs/editorjs'
-import BlockTool from './block-tool'
+import ContentlessBlock from './contentless-block'
 import icon from '../assets/editor/delimiter.svg.txt'
 const title = 'Delimiter'
 
-export class Delimiter extends BlockTool {
-  static get contentless () {
-    return true
-  }
-
+export class Delimiter extends ContentlessBlock {
   protected get _CSS () {
     return {
       block: this.api.styles.block,
