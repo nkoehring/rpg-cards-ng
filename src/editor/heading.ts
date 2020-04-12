@@ -49,7 +49,6 @@ class Heading extends ContentBlock {
   constructor (args: ContentBlockArgs) {
     super(args)
     this._config = args.config as HeadingConfig
-    this._CSS.wrapper = 'card-content-block'
 
     if (this._config.levels === undefined) {
       this._config.levels = [HeadingLevel.Two, HeadingLevel.Three]
@@ -110,11 +109,9 @@ class Heading extends ContentBlock {
   }
 
   protected _render (): HTMLElement {
-    console.log('render', `H${this.currentLevel}`, this.data)
-
     const el = document.createElement(`H${this.currentLevel}`)
     el.innerHTML = this.data.text || ''
-    el.classList.add(this._CSS.wrapper, this._CSS.block)
+    el.classList.add(this._CSS.block)
     el.contentEditable = 'true'
     el.dataset.placeholder = this._config.placeholder || ''
     return el
