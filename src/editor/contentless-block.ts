@@ -1,24 +1,24 @@
-import { BlockTool, BlockToolData, ToolConfig, ToolboxConfig, API } from '@editorjs/editorjs'
-
-interface BlockToolConfig extends ToolConfig {
-  [key: string]: string;
-}
+import { BlockTool, BlockToolData, ToolSettings, ToolboxConfig, API } from '@editorjs/editorjs'
 
 export interface BlockToolArgs {
   api: API;
-  config: BlockToolConfig;
+  config?: ToolSettings;
   data?: BlockToolData;
 }
 
 export class ContentlessBlock implements BlockTool {
+  static get contentless () {
+    return true
+  }
+
   protected api: API
   protected _element: HTMLElement
   protected _data: object
-  protected _config: ToolConfig
+  protected _config: ToolSettings
 
   constructor ({ data, config, api }: BlockToolArgs) {
     this.api = api
-    this._config = config
+    this._config = config as ToolSettings
     this._data = data || {}
     this._element = this._render()
   }
