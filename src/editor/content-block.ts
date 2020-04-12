@@ -1,15 +1,33 @@
-import { BlockTool, BlockToolData, ToolboxConfig, API, HTMLPasteEvent, ToolConstructable, ToolSettings } from '@editorjs/editorjs'
-import icon from '@/assets/editor/text.svg.txt'
+import {
+  BlockTool,
+  BlockToolData,
+  ToolboxConfig,
+  API,
+  HTMLPasteEvent,
+  ToolSettings,
+  SanitizerConfig
+} from '@editorjs/editorjs'
+
+export { HTMLPasteEvent } from '@editorjs/editorjs'
 
 interface PasteConfig {
   tags: string[];
 }
 
-interface ContentBlockConfig extends ToolSettings {
+export interface ContentBlockConfig extends ToolSettings {
   placeholder?: string;
 }
 
-interface ContentBlockArgs {
+export interface ContentBlockSettingButton {
+  name: string;
+  icon: string;
+  action: (name: string, event?: MouseEvent) => void; // action triggered by button
+  isActive?: (name: string) => boolean; // determine if current button is active
+}
+
+export type ContentBlockSettings = ContentBlockSettingButton[]
+
+export interface ContentBlockArgs {
   api: API;
   config?: ContentBlockConfig;
   data?: BlockToolData;
@@ -19,7 +37,7 @@ interface CSSClasses {
   [key: string]: string;
 }
 
-interface ContentBlockData extends BlockToolData {
+export interface ContentBlockData extends BlockToolData {
   text: string;
 }
 
@@ -32,8 +50,7 @@ export class ContentBlock implements BlockTool {
   static _supportedTags: string[] = []
 
   static _toolboxConfig: ToolboxConfig = {
-    // icon: '<svg></svg>',
-    icon,
+    icon: '<svg></svg>',
     title: 'UnnamedContentPlugin'
   }
 
@@ -48,6 +65,7 @@ export class ContentBlock implements BlockTool {
   protected _placeholder: string
   protected _CSS: CSSClasses
   protected onKeyUp: (event: KeyboardEvent) => void
+  protected _settingButtons: ContentBlockSettings = []
 
   constructor ({ data, config, api }: ContentBlockArgs) {
     this.api = api
@@ -133,7 +151,7 @@ export class ContentBlock implements BlockTool {
   }
 
   // Sanitizer rules
-  static get sanitize () {
+  static get sanitize (): SanitizerConfig {
     return {
       text: { br: true }
     }
@@ -151,6 +169,30 @@ export class ContentBlock implements BlockTool {
     this._element.innerHTML = this._data.text || ''
   }
 
+  public renderSettings (): HTMLElement {
+    const wrapper = document.createElement('DIV')
+
+    this._settingButtons.forEach(tune => {
+      // make sure the settings button does something
+      if (!tune.icon || typeof tune.action !== 'function') return
+
+      const { name, icon, action, isActive } = tune
+
+      const btn = document.createElement('SPAN')
+      btn.classList.add(this.api.styles.settingsButton)
+
+      if (typeof isActive === 'function' && isActive(name)) {
+        btn.classList.add(this.api.styles.settingsButtonActive)
+      }
+      btn.innerHTML = icon
+      btn.addEventListener('click', event => action(name, event))
+
+      wrapper.appendChild(btn)
+    })
+
+    return wrapper
+  }
+
   // Used by Editor.js paste handling API.
   // Provides configuration to handle the tools tags.
   static get pasteConfig (): PasteConfig {
@@ -165,4 +207,4 @@ export class ContentBlock implements BlockTool {
   }
 }
 
-export default ContentBlock as ToolConstructable
+export default ContentBlock

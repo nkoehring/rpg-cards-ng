@@ -1,4 +1,3 @@
-import { ToolConstructable } from '@editorjs/editorjs'
 import ContentlessBlock from './contentless-block'
 import icon from '../assets/editor/delimiter.svg.txt'
 const title = 'Delimiter'
@@ -22,4 +21,4 @@ export class Delimiter extends ContentlessBlock {
   }
 }
 
-export default Delimiter as ToolConstructable
+export default Delimiter

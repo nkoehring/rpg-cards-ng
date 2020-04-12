@@ -1,10 +1,5 @@
-import {
-  ContentBlock,
-  ContentBlockArgs,
-  ContentBlockConfig,
-  ContentBlockData,
-  HTMLPasteEvent
-} from './content-block'
+import { ToolConstructable, ToolConfig, HTMLPasteEvent } from '@editorjs/editorjs'
+import { BlockToolExt, BlockToolArgs } from './block-tool'
 
 import icon from '../assets/editor/header.svg.txt'
 import icon1 from '../assets/editor/header1.svg.txt'
@@ -13,8 +8,11 @@ import icon3 from '../assets/editor/header3.svg.txt'
 import icon4 from '../assets/editor/header4.svg.txt'
 import icon5 from '../assets/editor/header5.svg.txt'
 import icon6 from '../assets/editor/header6.svg.txt'
-
 const title = 'Heading'
+
+interface PasteConfig {
+  tags: string[];
+}
 
 enum HeadingLevel {
   One = 1,
@@ -25,31 +23,35 @@ enum HeadingLevel {
   Six = 6
 }
 
-const icons = [null, icon1, icon2, icon3, icon4, icon5, icon6]
-
-interface HeadingConfig extends ContentBlockConfig {
+interface HeaderConfig extends ToolConfig {
   placeholder?: string;
   levels?: HeadingLevel[];
   defaultLevel?: HeadingLevel;
 }
 
-interface HeaderData extends ContentBlockData {
-  text: string;
+interface HeaderData {
+  text?: string;
   level?: HeadingLevel;
 }
 
-class Heading extends ContentBlock {
-  static _supportedTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6']
-  static _toolboxConfig = { icon, title }
-
-  protected _config: HeadingConfig
+class Heading extends BlockToolExt {
+  protected _config: HeaderConfig
+  protected settingsButtons: HTMLElement[] = []
+  private levels: HeadingLevel[]
   private defaultLevel: HeadingLevel
   private currentLevel: HeadingLevel
+  private icons: Map<HeadingLevel, string> = new Map([
+    [HeadingLevel.One, icon1],
+    [HeadingLevel.Two, icon2],
+    [HeadingLevel.Three, icon3],
+    [HeadingLevel.Four, icon4],
+    [HeadingLevel.Five, icon5],
+    [HeadingLevel.Six, icon6]
+  ])
 
-  constructor (args: ContentBlockArgs) {
+  constructor (args: BlockToolArgs) {
     super(args)
-    this._config = args.config as HeadingConfig
-    this._CSS.wrapper = 'card-content-block'
+    this._config = args.config as HeaderConfig
 
     if (this._config.levels === undefined) {
       this._config.levels = [HeadingLevel.Two, HeadingLevel.Three]
@@ -60,6 +62,7 @@ class Heading extends ContentBlock {
     if (this._config.levels.indexOf(this._config.defaultLevel) === -1) {
       console.warn('(ง\'̀-\'́)ง Heading Tool: the default level specified was not found in available levels')
     }
+    this.levels = this._config.levels
     this.defaultLevel = this._config.defaultLevel
     this.currentLevel = this.defaultLevel
 
@@ -68,19 +71,30 @@ class Heading extends ContentBlock {
       level: this.currentLevel,
       text: (args.data as HeaderData).text || ''
     }
-
-    this._settingButtons = this._config.levels.map(level => {
-      return {
-        name: `H${level}`,
-        icon: icons[level] || icon,
-        action: (name: string) => this.setLevel(name),
-        isActive: (name: string): boolean => this.isCurrentLevel(name)
-      }
-    })
   }
 
-  public get data () {
-    return this._data
+  public renderSettings (): HTMLElement {
+    const wrapper = document.createElement('DIV')
+
+    this.levels.forEach(level => {
+      const { settingsButton, settingsButtonActive } = this._CSS
+      const btn = document.createElement('SPAN')
+      btn.classList.add(settingsButton)
+      btn.dataset.level = `${level}`
+      btn.innerHTML = this.icons.get(level) || icon
+
+      if (this.currentLevel === level) btn.classList.add(settingsButtonActive)
+
+      btn.addEventListener('click', () => this.setLevel(level))
+      wrapper.appendChild(btn)
+      this.settingsButtons.push(btn)
+    })
+
+    return wrapper
+  }
+
+  public get data (): HeaderData {
+    return this._data as HeaderData
   }
 
   public set data (data: HeaderData) {
@@ -99,14 +113,17 @@ class Heading extends ContentBlock {
     this._element = newHeader
   }
 
-  private isCurrentLevel (name: string): boolean {
-    const currentLevel = `H${this.currentLevel}`
-    return name === currentLevel
+  private setLevel (level: HeadingLevel) {
+    this.data = { level, text: this._element.innerHTML }
   }
 
-  private setLevel (name: string) {
-    const level = parseInt(name[1], 10)
-    this.data = { level, text: this._element.innerHTML }
+  protected get _CSS () {
+    return {
+      block: this.api.styles.block,
+      settingsButton: this.api.styles.settingsButton,
+      settingsButtonActive: this.api.styles.settingsButtonActive,
+      wrapper: 'card-heading'
+    }
   }
 
   protected _render (): HTMLElement {
@@ -121,7 +138,7 @@ class Heading extends ContentBlock {
   }
 
   // Handle pasted H1-H6 tags to substitute with header tool
-  public onPaste (event: HTMLPasteEvent) {
+  onPaste (event: HTMLPasteEvent) {
     const content = event.detail.data
     const text = content.innerHTML
     let level = this.defaultLevel
@@ -139,6 +156,14 @@ class Heading extends ContentBlock {
     this.data = { level, text }
   }
 
+  // Used by Editor.js paste handling API.
+  // Provides configuration to handle H1-H6 tags.
+  static get pasteConfig (): PasteConfig {
+    return {
+      tags: ['H1', 'H2', 'H3', 'H4', 'H5', 'H6']
+    }
+  }
+
   // Method that specified how to merge two Text blocks.
   // Called by Editor.js by backspace at the beginning of the Block
   public merge (data: HeaderData) {
@@ -148,17 +173,35 @@ class Heading extends ContentBlock {
     }
   }
 
+  // validate text block data
+  validate (blockData: HeaderData): boolean {
+    if (!blockData.text) return false
+    return blockData.text.trim() !== ''
+  }
+
   // extract tools data from view
-  public save (toolsContent: HTMLElement): HeaderData {
+  save (toolsContent: HTMLElement): HeaderData {
     return {
       text: toolsContent.innerHTML,
       level: this.currentLevel
     }
   }
 
-  static get sanitize () {
+  // Allow Heading to be converted to/from other blocks
+  static get conversionConfig () {
+    return {
+      export: 'text', // use 'text' property for other blocks
+      import: 'text' // fill 'text' property from other block's export string
+    }
+  }
+
+  static get sanitize (): object {
     return { level: {} }
+  }
+
+  static get toolbox () {
+    return { icon, title }
   }
 }
 
-export default Heading
+export default Heading as ToolConstructable
