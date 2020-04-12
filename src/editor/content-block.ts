@@ -33,7 +33,7 @@ export interface ContentBlockArgs {
   data?: BlockToolData;
 }
 
-interface CSSClasses {
+export interface CSSClasses {
   [key: string]: string;
 }
 
@@ -63,18 +63,14 @@ export class ContentBlock implements BlockTool {
   protected _data: ContentBlockData
   protected _config: ContentBlockConfig
   protected _placeholder: string
-  protected _CSS: CSSClasses
+  protected _CSS: CSSClasses = {}
   protected onKeyUp: (event: KeyboardEvent) => void
   protected _settingButtons: ContentBlockSettings = []
 
   constructor ({ data, config, api }: ContentBlockArgs) {
     this.api = api
     this._config = config as ContentBlockConfig
-
-    this._CSS = {
-      block: this.api.styles.block,
-      wrapper: 'card-content-block'
-    }
+    this._CSS.block = this.api.styles.block
 
     this.onKeyUp = (event: KeyboardEvent) => this._onKeyUp(event)
 
@@ -98,7 +94,7 @@ export class ContentBlock implements BlockTool {
   // whenever a redraw is needed the result is saved in this._element
   protected _render (): HTMLElement {
     const el = document.createElement('DIV')
-    el.classList.add(this._CSS.wrapper, this._CSS.block)
+    el.classList.add(this._CSS.block)
     el.dataset.placeholder = this._placeholder
     el.addEventListener('keyup', this.onKeyUp)
     el.innerHTML = this.data.text
