@@ -86,22 +86,29 @@ export default class DeckView extends Vue {
     if (this.deck === null) return
 
     const newCard = defaultCard()
-    newCard.content = [{
-      type: 'heading',
-      attrs: { level: 2 },
-      content: [{
-        type: 'text',
-        text: 'feel free to edit this card'
-      }]
-    }, {
-      type: 'horizontal_rule'
-    }, {
-      type: 'paragraph',
-      content: [{
-        type: 'text',
-        text: 'This is a rich-text editor, so you can basically do whatever you want.'
-      }]
-    }]
+    newCard.content = {
+      time: Date.now(),
+      blocks: [{
+        type: 'heading',
+        data: {
+          text: 'Next Level RPG Card',
+          level: 2
+        }
+      }, {
+        type: 'delimiter',
+        data: { variant: 'pointing-left' }
+      }, {
+        type: 'paragraph',
+        data: { text: 'This card is a rich text editor so you can basically do whatever you want.' }
+      }, {
+        type: 'paragraph',
+        data: { text: ' ' }
+      }, {
+        type: 'paragraph',
+        data: { text: 'You see that delimiter over there? It seems to be wrong, or maybe you like it that way. In any way you can change it by clicking on it and then on the little tool button on the right.' }
+      }],
+      version: '2.17.0'
+    }
     this.deck.cards.push(newCard)
     this.$storage.persist()
 

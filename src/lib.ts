@@ -45,6 +45,10 @@ export function defaultCard (): Card {
     count: 1,
     tags: [],
     icon: 'robe',
-    content: []
+    content: {
+      time: Date.now(),
+      blocks: [],
+      version: '2.17.0'
+    }
   }
 }

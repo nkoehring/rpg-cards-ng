@@ -20,7 +20,7 @@
         :card-id="card.id"
         :active="isSelection"
         :content="card.content"
-        @input="$emit('edit', $event)"
+        @change="$emit('edit', $event)"
       />
     </section>
     <section name="card-back" class="card-back">
