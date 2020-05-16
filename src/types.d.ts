@@ -2,19 +2,15 @@ interface KV<V> {
   [key: string]: V;
 }
 
-interface TextNode {
-  type: 'text';
-  text: string;
+interface ContentBlock {
+  type: string;
+  data: object;
 }
 
-interface SimpleNode {
-  type: string;
-}
-
-interface ContentNode {
-  type: string;
-  content: (ContentNode | TextNode | SimpleNode)[];
-  attrs?: object;
+interface CardContent {
+  time: number;
+  blocks: ContentBlock[];
+  version: string;
 }
 
 interface Card {
@@ -23,7 +19,7 @@ interface Card {
   count: number;
   tags: string[];
   icon: string;
-  content: (ContentNode | SimpleNode)[];
+  content: CardContent;
   backIcon?: string;
   color?: string;
 }

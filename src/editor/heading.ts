@@ -2,8 +2,7 @@ import {
   ContentBlock,
   ContentBlockArgs,
   ContentBlockConfig,
-  ContentBlockData,
-  HTMLPasteEvent
+  ContentBlockData
 } from './content-block'
 
 import icon from '../assets/editor/header.svg.txt'
@@ -33,7 +32,7 @@ interface HeadingConfig extends ContentBlockConfig {
   defaultLevel?: HeadingLevel;
 }
 
-interface HeaderData extends ContentBlockData {
+interface HeadingData extends ContentBlockData {
   text: string;
   level?: HeadingLevel;
 }
@@ -65,7 +64,7 @@ class Heading extends ContentBlock {
     // setting data will rerender the element with the right settings
     this.data = {
       level: this.currentLevel,
-      text: (args.data as HeaderData).text || ''
+      text: (args.data as HeadingData).text || ''
     }
 
     this._settingButtons = this._config.levels.map(level => {
@@ -78,12 +77,12 @@ class Heading extends ContentBlock {
     })
   }
 
-  public get data () {
-    return this._data
+  public get data (): HeadingData {
+    return this._data as HeadingData
   }
 
-  public set data (data: HeaderData) {
-    const currentData = this._data as HeaderData
+  public set data (data: HeadingData) {
+    const currentData = this._data as HeadingData
 
     if (data.level === undefined) data.level = currentData.level || this.defaultLevel
     if (data.text === undefined) data.text = currentData.text || ''
@@ -118,12 +117,11 @@ class Heading extends ContentBlock {
   }
 
   // Handle pasted H1-H6 tags to substitute with header tool
-  public onPaste (event: HTMLPasteEvent) {
-    const content = event.detail.data
-    const text = content.innerHTML
+  protected pasteHandler (element: HTMLHeadingElement): HeadingData {
+    const text = element.innerHTML
     let level = this.defaultLevel
 
-    const tagMatch = content.tagName.match(/H(\d)/)
+    const tagMatch = element.tagName.match(/H(\d)/)
     if (tagMatch) level = parseInt(tagMatch[1], 10)
 
     // Fallback to nearest level when specified not available
@@ -133,12 +131,12 @@ class Heading extends ContentBlock {
       })
     }
 
-    this.data = { level, text }
+    return { level, text }
   }
 
   // Method that specified how to merge two Text blocks.
   // Called by Editor.js by backspace at the beginning of the Block
-  public merge (data: HeaderData) {
+  public merge (data: HeadingData) {
     this.data = {
       text: this.data.text + (data.text || ''),
       level: this.data.level
@@ -146,7 +144,7 @@ class Heading extends ContentBlock {
   }
 
   // extract tools data from view
-  public save (toolsContent: HTMLElement): HeaderData {
+  public save (toolsContent: HTMLElement): HeadingData {
     return {
       text: toolsContent.innerHTML,
       level: this.currentLevel

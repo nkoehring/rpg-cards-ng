@@ -38,7 +38,15 @@ export interface CSSClasses {
 }
 
 export interface ContentBlockData extends BlockToolData {
-  text: string;
+  text?: string;
+}
+
+type importFunction = (str: string) => ContentBlockData
+type exportFunction = (data: ContentBlockData) => string
+
+export interface ConversionConfig {
+  import: string | importFunction;
+  export: string | exportFunction;
 }
 
 export class ContentBlock implements BlockTool {
@@ -97,7 +105,7 @@ export class ContentBlock implements BlockTool {
     el.classList.add(this._CSS.block)
     el.dataset.placeholder = this._placeholder
     el.addEventListener('keyup', this.onKeyUp)
-    el.innerHTML = this.data.text
+    el.innerHTML = this.data.text || ''
     el.contentEditable = 'true'
 
     return el
@@ -112,7 +120,7 @@ export class ContentBlock implements BlockTool {
   // Called by Editor.js by backspace at the beginning of the Block
   public merge (data: ContentBlockData) {
     this.data = {
-      text: this.data.text + data.text
+      text: (this.data.text || '') + data.text
     }
   }
 
@@ -129,20 +137,17 @@ export class ContentBlock implements BlockTool {
     }
   }
 
-  // On paste callback fired from Editor.
-  public onPaste (event: HTMLPasteEvent) {
-    this.data = {
-      text: event.detail.data.innerHTML
-    }
+  public get CSS (): CSSClasses {
+    return this._CSS
   }
 
   /**
    * Enable Conversion Toolbar. Paragraph can be converted to/from other tools
    */
-  static get conversionConfig () {
+  static get conversionConfig (): ConversionConfig {
     return {
       export: 'text', // to convert Paragraph to other block, use 'text' property of saved data
-      import: 'text' // to covert other block's exported string to Paragraph, fill 'text' property of tool data
+      import: 'text' //  to covert other block's exported string to Paragraph, fill 'text' property of tool data
     }
   }
 
@@ -195,6 +200,17 @@ export class ContentBlock implements BlockTool {
     return {
       tags: this._supportedTags
     }
+  }
+
+  // overwrite this if you need special handling of paste data
+  protected pasteHandler (element: HTMLElement): ContentBlockData {
+    return { text: element.innerText }
+  }
+
+  // On paste callback fired from Editor.
+  public onPaste (event: HTMLPasteEvent) {
+    const element = event.detail.data
+    this.data = this.pasteHandler(element)
   }
 
   // Icon and title for displaying at the Toolbox

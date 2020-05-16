@@ -1,0 +1,1 @@
+<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"><circle r="7" cx="7" cy="7" stroke="black" stroke-width="2" fill="none" /></svg>

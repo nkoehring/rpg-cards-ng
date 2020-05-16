@@ -1,5 +1,5 @@
 <template>
-  <main :id="id" class="card-content"></main>
+  <main ref="cardEl" class="card-content"></main>
 </template>
 
 <script lang="ts">
@@ -7,7 +7,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 import Editor from '@editorjs/editorjs'
 import List from '@editorjs/list'
-import { Heading, Delimiter } from '@/editor'
+import { Heading, Delimiter, Charges } from '@/editor'
 
 @Component
 export default class DeckCardEditor extends Vue {
@@ -23,16 +23,25 @@ export default class DeckCardEditor extends Vue {
 
   private mounted () {
     this.editor = new Editor({
-      holderId: this.id,
+      holder: this.$refs.cardEl as HTMLElement,
       autofocus: false,
       tools: {
         // header: Heading,
         list: { class: List, inlineToolbar: true },
+        heading: { class: Heading, inlineToolbar: true },
         delimiter: { class: Delimiter, inlineToolbar: false },
-        heading: { class: Heading, inlineToolbar: true }
+        charges: { class: Charges, inlineToolbar: false }
       },
-      // data: {},
-      placeholder: 'Click here to write your card.'
+      data: this.content,
+      placeholder: 'Click here to write your card.',
+      onChange: () => {
+        console.log('editor change, saving')
+        this.editor.save().then(value => {
+          this.$emit('change', { field: 'content', value })
+        }).catch(error => {
+          console.error('error saving data', error)
+        })
+      }
     })
   }
 }
@@ -45,7 +54,7 @@ export default class DeckCardEditor extends Vue {
 
 .card-content .ce-paragraph, .card-content p {
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 .card-content ul {
@@ -94,5 +103,28 @@ export default class DeckCardEditor extends Vue {
   border-width: 2px 220px 2px 0;
   border-color: transparent var(--highlight-color) transparent transparent;
 }
+.card-content .cdx-list__item {
+  padding: 0;
+  line-height: 1.3;
+}
+.card-content .card-charges-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 1em;
+}
+.card-content .card-charges-wrapper.card-charges-stretch { justify-content: space-around; }
+.card-content .card-charges-wrapper > .card-charge {
+  width: 1.0em;
+  height: 1.0em;
+  border: 2px solid var(--highlight-color);
+  margin: .5em .2em;
+}
+.card-content .card-charges-wrapper > .card-charge-circle { border-radius: 100%; }
+.card-content .card-charges-wrapper > .card-charge-size-1 { width: 1.0em; height: 1.0em; }
+.card-content .card-charges-wrapper > .card-charge-size-2 { width: 1.2em; height: 1.2em; }
+.card-content .card-charges-wrapper > .card-charge-size-3 { width: 1.4em; height: 1.4em; }
+.card-content .card-charges-wrapper > .card-charge-size-4 { width: 1.6em; height: 1.6em; }
+.card-content .card-charges-wrapper > .card-charge-size-5 { width: 1.8em; height: 1.8em; }
 [contenteditable="true"] { outline: none; }
 </style>
