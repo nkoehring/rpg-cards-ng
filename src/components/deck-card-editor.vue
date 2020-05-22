@@ -7,7 +7,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 
 import Editor from '@editorjs/editorjs'
 import List from '@editorjs/list'
-import { Heading, Delimiter, Charges } from '@/editor'
+import { Heading, Delimiter, Charges, DnDStats } from '@/editor'
 
 @Component
 export default class DeckCardEditor extends Vue {
@@ -30,7 +30,8 @@ export default class DeckCardEditor extends Vue {
         list: { class: List, inlineToolbar: true },
         heading: { class: Heading, inlineToolbar: true },
         delimiter: { class: Delimiter, inlineToolbar: false },
-        charges: { class: Charges, inlineToolbar: false }
+        charges: { class: Charges, inlineToolbar: false },
+        dndstats: { class: DnDStats, inlineToolbar: false }
       },
       data: this.content,
       placeholder: 'Click here to write your card.',
@@ -126,5 +127,37 @@ export default class DeckCardEditor extends Vue {
 .card-content .card-charges-wrapper > .card-charge-size-3 { width: 1.4em; height: 1.4em; }
 .card-content .card-charges-wrapper > .card-charge-size-4 { width: 1.6em; height: 1.6em; }
 .card-content .card-charges-wrapper > .card-charge-size-5 { width: 1.8em; height: 1.8em; }
+
+.card-content .card-dnd-stats {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  color: var(--highlight-color);
+}
+.card-content .dnd-stat-block {
+  flex: 1 1 auto;
+  display: flex;
+  flex-flow: row wrap;
+  font-size: .8em;
+}
+.card-content .dnd-stat-block > .dnd-stat-title {
+  width: 100%;
+  font-weight: bold;
+  text-align: center;
+}
+.card-content .dnd-stat-block > input {
+  width: 50%;
+  background: white;
+  color: var(--highlight-color);
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1em;
+  text-align: center;
+}
+.card-content .dnd-stat-block {
+}
+
 [contenteditable="true"] { outline: none; }
 </style>
