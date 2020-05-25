@@ -143,7 +143,7 @@ export default class DeckView extends Vue {
   margin-top: -2px;
 }
 .deck-bg {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
