@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="saveDeck">
+  <form class="options-form" @submit.prevent="saveDeck">
     <div class="deck-form-fields">
       <select v-model="icon">
         <option :key="iconName" :value="iconName" v-for="iconName in icons">{{ iconName }}</option>
@@ -78,32 +78,3 @@ export default class DeckForm extends Vue {
   }
 }
 </script>
-
-<style scoped>
-form {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-evenly;
-}
-
-.deck-form-fields {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  max-width: 25rem;
-  width: 50%;
-  margin-right: -15%;
-  z-index: 1;
-}
-
-.deck-form-fields select,
-.deck-form-fields input,
-.deck-form-fields button {
-  margin: .5em 0;
-}
-.deck-form-fields input[type=color] {
-  margin-left: .5em;
-  padding: 0;
-  vertical-align: middle;
-}
-</style>

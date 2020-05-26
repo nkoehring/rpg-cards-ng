@@ -16,7 +16,8 @@
 
     <header>
       <span>{{ deck.name }}</span>
-      <button class="edit-button" @click="popup = true">edit</button>
+      <button class="edit-button" @click="popup = 'edit'">edit</button>
+      <button class="print-button" @click="popup = 'print'">print</button>
 
       <p>{{ deck.description }}</p>
     </header>
@@ -35,9 +36,19 @@
       <deck-cover @click="newCard" />
     </section>
 
-    <div id="popup" v-show="popup">
+    <div id="popup" v-if="popup === 'edit'">
       <div class="popup-content">
         <EditDeckForm
+          :deck="deck"
+          @save="closeAndReload"
+          @close="popup = false"
+        />
+      </div>
+    </div>
+
+    <div id="popup" v-else-if="popup === 'print'">
+      <div class="popup-content">
+        <PrintDeckForm
           :deck="deck"
           @save="closeAndReload"
           @close="popup = false"
@@ -52,10 +63,11 @@ import { Component, Vue } from 'vue-property-decorator'
 import DeckCover from '@/components/deck-cover.vue'
 import DeckCard from '@/components/deck-card.vue'
 import EditDeckForm from '@/components/edit-deck-form.vue'
+import PrintDeckForm from '@/components/print-deck-form.vue'
 import { iconPath, defaultCard } from '@/lib'
 
 @Component({
-  components: { DeckCover, DeckCard, EditDeckForm }
+  components: { DeckCover, DeckCard, EditDeckForm, PrintDeckForm }
 })
 export default class DeckView extends Vue {
   private popup = false
@@ -137,10 +149,12 @@ export default class DeckView extends Vue {
 </script>
 
 <style scoped>
-.edit-button {
+.edit-button, .print-button {
   vertical-align: middle;
-  margin-left: 1em;
   margin-top: -2px;
+}
+.edit-button {
+  margin-left: 1em;
 }
 .deck-bg {
   position: fixed;
