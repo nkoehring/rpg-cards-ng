@@ -4,6 +4,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Card } from '@/types'
 
 import Editor from '@editorjs/editorjs'
 import List from '@editorjs/list'

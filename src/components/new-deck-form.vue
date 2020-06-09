@@ -7,6 +7,7 @@
 
 <script lang="ts">
 import { Component, Emit, Vue } from 'vue-property-decorator'
+import { Deck } from '@/types'
 import DeckForm from './deck-form.vue'
 import { defaultDeck, randomId } from '../lib'
 

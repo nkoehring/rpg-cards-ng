@@ -35,7 +35,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { cardWHtoStyle, iconPath } from '@/lib'
+import { Deck, Card } from '@/types'
+import { cardSizeToStyle, iconPath } from '@/lib'
 import DeckCardEditor from '@/components/deck-card-editor.vue'
 
 @Component({
@@ -77,7 +78,7 @@ export default class DeckCard extends Vue {
   private get containerStyle () {
     const style = {
       '--highlight-color': this.card.color || this.deck.color,
-      ...cardWHtoStyle(this.deck.cardWidth, this.deck.cardHeight),
+      ...cardSizeToStyle(this.deck.cardSize),
       transform: ''
     }
 

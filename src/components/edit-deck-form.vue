@@ -7,6 +7,7 @@
 
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
+import { Deck } from '@/types'
 import DeckForm from './deck-form.vue'
 
 @Component({

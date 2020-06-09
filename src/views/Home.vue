@@ -27,6 +27,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Deck } from '../types'
 import DeckCover from '@/components/deck-cover.vue'
 import NewDeckForm from '@/components/new-deck-form.vue'
 

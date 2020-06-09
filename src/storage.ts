@@ -1,3 +1,4 @@
+import { Deck, StoredStuff } from './types'
 const KEY = 'rpg-cards-ng'
 
 export default class StorageHandler {

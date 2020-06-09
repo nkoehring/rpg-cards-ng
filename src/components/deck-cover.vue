@@ -12,7 +12,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { cardWHtoStyle, iconPath, defaultDeck } from '@/lib'
+import { Deck } from '@/types'
+import { cardSizeToStyle, iconPath, defaultDeck } from '@/lib'
 
 const emptyDeck: Deck = {
   ...defaultDeck(),
@@ -34,7 +35,7 @@ export default class DeckCover extends Vue {
   private get style () {
     return {
       backgroundColor: this.deck.color,
-      ...cardWHtoStyle(this.deck.cardWidth, this.deck.cardHeight)
+      ...cardSizeToStyle(this.deck.cardSize)
     }
   }
 }

@@ -60,6 +60,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { Deck, Card } from '../types'
 import DeckCover from '@/components/deck-cover.vue'
 import DeckCard from '@/components/deck-card.vue'
 import EditDeckForm from '@/components/edit-deck-form.vue'

@@ -24,8 +24,9 @@
 
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
+import { Deck, CardSize } from '@/types'
 import DeckCover from '@/components/deck-cover.vue'
-import { cardWHFromSize, cardSizeFromWH, iconPath } from '../lib'
+import { iconPath } from '../lib'
 
 @Component({
   components: { DeckCover }
@@ -35,15 +36,15 @@ export default class DeckForm extends Vue {
 
   private icons = ['mouth-watering', 'robe', 'thorny-triskelion']
   private sizes = [
-    { title: '88x62 (Poker)', value: '88x62' },
-    { title: '88x56 (Bridge)', value: '88x56' }
+    { title: '88x62 (Poker)', value: CardSize.Poker },
+    { title: '88x56 (Bridge)', value: CardSize.Bridge }
   ]
 
   private icon: string
   private name: string
   private description: string
   private color: string
-  private cardSize: string
+  private cardSize: CardSize
 
   constructor () {
     super()
@@ -51,24 +52,21 @@ export default class DeckForm extends Vue {
     this.name = this.deck.name
     this.description = this.deck.description
     this.color = this.deck.color
-    this.cardSize = cardSizeFromWH(this.deck.cardWidth, this.deck.cardHeight)
+    this.cardSize = this.deck.cardSize
   }
 
   private get iconPath () {
     return iconPath(this.icon)
   }
 
-  private get newDeck () {
-    const [cardWidth, cardHeight] = cardWHFromSize(this.cardSize)
-
+  private get newDeck (): Deck {
     return {
       ...this.deck,
       name: this.name,
       description: this.description,
       color: this.color,
       icon: this.icon,
-      cardWidth,
-      cardHeight
+      cardSize: this.cardSize
     }
   }
 
