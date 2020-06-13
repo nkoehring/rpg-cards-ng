@@ -25,6 +25,7 @@
 <script lang="ts">
 import { Component, Prop, Emit, Vue } from 'vue-property-decorator'
 import { Deck, CardSize } from '@/types'
+import { cardSizeOptions } from '@/consts'
 import DeckCover from '@/components/deck-cover.vue'
 import { iconPath } from '../lib'
 
@@ -35,10 +36,7 @@ export default class DeckForm extends Vue {
   @Prop() public readonly deck!: Deck
 
   private icons = ['mouth-watering', 'robe', 'thorny-triskelion']
-  private sizes = [
-    { title: '88x62 (Poker)', value: CardSize.Poker },
-    { title: '88x56 (Bridge)', value: CardSize.Bridge }
-  ]
+  private sizes = cardSizeOptions
 
   private icon: string
   private name: string

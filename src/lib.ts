@@ -1,4 +1,4 @@
-import { CardSize, Deck, Card } from './types'
+import { CardSize, PageSize, Arrangement, Deck, Card } from './types'
 
 export function randomId (): string {
   const now = Date.now()
@@ -8,7 +8,7 @@ export function randomId (): string {
 }
 
 export function cardWHFromSize (size: CardSize): number[] {
-  return size.split('x').map(v => parseFloat(v)).reverse()
+  return size.split('x').map(v => parseFloat(v))
 }
 
 export function iconPath (icon: string): string {
@@ -31,8 +31,11 @@ export function defaultDeck (): Deck {
     name: 'the nameless',
     description: '',
     color: '#3C1C00',
+    cards: [],
     cardSize: CardSize.Poker,
-    cards: []
+    pageSize: PageSize.A4,
+    arrangement: Arrangement.DoubleSided,
+    roundedCorners: true
   }
 }
 
@@ -49,4 +52,15 @@ export function defaultCard (): Card {
       version: '2.17.0'
     }
   }
+}
+
+export function isValidDeck (deck: any): boolean {
+  const example = defaultDeck() as { [key: string]: any }
+
+  for (const key in example) {
+    const type = typeof example[key]
+    return typeof deck[key] === type
+  }
+
+  return true
 }

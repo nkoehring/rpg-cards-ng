@@ -1,3 +1,4 @@
+// page width x page height
 export const enum PageSize {
   A4 = '210mm 297mm',
   USLetter = '8.5in 11in',
@@ -9,9 +10,10 @@ export const enum PageSize {
   JISB5 = '257mm 364mm'
 }
 
+// card width x card height
 export const enum CardSize {
-  Poker = '89x64',
-  Bridge = '89x57'
+  Poker = '64x89',
+  Bridge = '57x89'
 }
 
 export const enum Arrangement {
@@ -54,6 +56,9 @@ export interface Deck {
   icon: string;
   cards: Card[];
   cardSize: CardSize;
+  arrangement: Arrangement;
+  pageSize: PageSize;
+  roundedCorners: boolean;
 }
 
 export interface Settings {

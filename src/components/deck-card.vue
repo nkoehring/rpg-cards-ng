@@ -47,9 +47,6 @@ export default class DeckCard extends Vue {
   @Prop() public readonly deck!: Deck
   @Prop() public readonly isSelection!: boolean
 
-  /// TODO: onEdit
-  // this.$emit('edit', { field: 'content', value: doc.content })
-
   private editHeadline = false;
   private editFieldIndex: number | null = null;
 
@@ -111,6 +108,8 @@ export default class DeckCard extends Vue {
 }
 </script>
 
+<style src="@/assets/card.css" />
+
 <style scoped>
 .flip-card {
   position: relative;
@@ -149,69 +148,21 @@ export default class DeckCard extends Vue {
 .flip-card:not(.active):hover > .card-front {
   transform: rotateX(0) rotateY(179deg);
 }
-.card-back {
-  z-index: 2;
-  transform: rotateX(0) rotateY(-179deg);
-}
 .flip-card:not(.active):hover > .card-back {
   z-index: 2;
   transform: rotateX(0) rotateY(0);
 }
 
 .card-front {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
   z-index: 1;
-}
-.card-front > header {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  height: 3.6rem;
-  color: white;
-  font-size: 1.2rem;
-  font-weight: normal;
-  font-variant: small-caps;
-  padding: 0 1em;
-  text-align: left;
-}
-.card-front > header > h1 {
-  margin: .5em 0 0 0;
-  align-self: center;
-  line-height: .9em;
-  font-size: 2rem;
-}
-.card-front > header > img {
-  height: 3rem;
-  align-self: end;
 }
 .card-front > header > h1[contenteditable="true"] { text-decoration: underline dotted; }
 .card-front > header > h1[contenteditable="true"]:focus { text-decoration: none; }
 
-.card-front > main {
-  position: relative;
-  display: flex;
-  flex-flow: column nowrap;
-  flex: 1;
-  height: 100%;
-  margin: .7rem .4rem .5rem;
-  padding: .2rem 1rem;
-  background: white;
-  border-radius: 1rem;
-  font-size: 1.2rem;
-  color: black;
-  overflow: hidden;
-}
-
 .card-back {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
   cursor: pointer;
-}
-.card-back > .icon-wrapper {
-  margin: 3em;
+  z-index: 2;
+  transform: rotateX(0) rotateY(-179deg);
 }
 .card-back > button {
   width: 80%;

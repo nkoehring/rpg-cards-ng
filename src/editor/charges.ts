@@ -21,7 +21,6 @@ class Charges extends ContentlessBlock {
 
   constructor (args: BlockToolArgs) {
     super(args)
-    console.log('new charges', args)
     this._settingButtons = [
       { name: 'box', icon, action: (name: string) => this.setVariant(name) },
       { name: 'more', icon: icon, action: () => this.increaseAmount() },
@@ -114,8 +113,6 @@ class Charges extends ContentlessBlock {
     for (let i = 0; i < this._amount; i++) {
       el.appendChild(this.createCharge())
     }
-
-    console.log('rendered', this._amount, 'charges', el)
 
     return el
   }
