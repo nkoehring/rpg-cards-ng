@@ -12,9 +12,6 @@ const state: State = {
   notifications: ref([])
 }
 
-// { level: 'warning', title: 'This is a pre-alpha version.', content: 'Many features are still unstable or completely missing. Check out <a href="https://github.com/nkoehring/rpg-cards-ng/">the code repository</a> for more information.', dismissed: false },
-// { level: 'info', title: '', content: 'Click the PLUS to create a new deck of cards.', dismissed: false },
-
 /// actions are called like action['sub/foo'](state.sub, payload)
 export const stateActions = {
   'notifications/add' (notifications: Ref<Notification[]>, payload: Payload) {
