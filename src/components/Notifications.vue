@@ -1,11 +1,11 @@
 <template>
-  <section name="notifications">
+  <transition-group name="notifications" tag="section" class="notification-section">
     <p class="note" :class="note.level" v-for="note in notDismissedNotes">
       <strong>{{ note.title }}</strong>
       <div v-html="note.content" />
       <button @click="$emit('dismiss', note)">dismiss</button>
     </p>
-  </section>
+  </transition-group>
 </template>
 
 <script lang="ts">

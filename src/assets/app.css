@@ -72,20 +72,21 @@ footer {
   display: block;
   margin-top: 1.5em;
 }
-section[name=notifications] {
+section.notification-section {
   display: block;
   max-width: 70rem;
   margin: 0 auto 1em;
 }
-section[name=notifications] > .note {
+section.notification-section > .note {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1em 1.5em;
   background-color: #0006;
   border: .5em solid #000;
+  transition: opacity .5s ease, transform .3s ease;
 }
-section[name=notifications] > .warning {
+section.notification-section > .warning {
   border-color: red;
 }
 
@@ -202,4 +203,13 @@ button.action-close {
 .centered {
   margin: auto inherit;
   text-align: center;
+}
+
+.notifications-enter-from, .notifications-leave-to {
+  opacity: 0;
+  transform: translate(0, -100px);
+}
+.notifications-leave-from, .notifications-enter-to {
+  opacity: 1;
+  transform: translate(0, 0);
 }
