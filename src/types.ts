@@ -82,4 +82,5 @@ export interface State {
   settings: Ref<Settings>;
   decks: Ref<IDeck[]>;
   notifications: Ref<Notification[]>;
+  initialized: Ref<boolean>;
 }
