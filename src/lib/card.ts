@@ -1,11 +1,9 @@
-import randomId from './randomId'
-import { Card, CardSize } from '../types'
+import { ICard, CardSize } from '../types'
 
-export function defaultCard (): Card {
+export function defaultCard (): ICard {
   return {
-    id: `c${randomId()}`,
+    id: 0,
     name: 'no title yet',
-    count: 1,
     tags: [],
     icon: 'robe',
     content: {

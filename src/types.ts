@@ -28,35 +28,34 @@ export interface KV<V> {
   [key: string]: V;
 }
 
-export interface ContentBlock {
+export interface IContentBlock {
   type: string;
   data: object;
 }
 
-export interface CardContent {
+export interface ICardContent {
   time: number;
-  blocks: ContentBlock[];
+  blocks: IContentBlock[];
   version: string;
 }
 
-export interface Card {
-  id: string;
+export interface ICard {
+  id: number;
   name: string;
-  count: number;
   tags: string[];
   icon: string;
-  content: CardContent;
+  content: ICardContent;
   backIcon?: string;
   color?: string;
 }
 
-export interface Deck {
-  id: string;
+export interface IDeck {
+  id: number;
   name: string;
   description: string;
   color: string;
   icon: string;
-  cards: Card[];
+  cards: ICard[];
   cardSize: CardSize;
   arrangement: Arrangement;
   pageSize: PageSize;
@@ -68,7 +67,7 @@ export interface Settings {
 }
 
 export interface StoredSettings {
-  decks: Deck[];
+  decks: IDeck[];
   defaults: Settings;
 }
 
@@ -81,6 +80,6 @@ export interface Notification {
 
 export interface State {
   settings: Ref<Settings>;
-  decks: Ref<Deck[]>;
+  decks: Ref<IDeck[]>;
   notifications: Ref<Notification[]>;
 }

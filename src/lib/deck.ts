@@ -1,9 +1,8 @@
-import randomId from './randomId'
-import { Deck, CardSize, PageSize, Arrangement } from '../types'
+import { IDeck, CardSize, PageSize, Arrangement } from '../types'
 
-export function defaultDeck (): Deck {
+export function defaultDeck (): IDeck {
   return {
-    id: randomId(),
+    id: 0,
     icon: 'robe',
     name: 'the nameless',
     description: '',

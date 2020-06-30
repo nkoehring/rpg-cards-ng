@@ -1,6 +1,7 @@
 import { reactive, ref, Ref } from 'vue'
-import { State, Notification, Deck } from './types'
+import { State, Notification, IDeck } from './types'
 import { defaultDeck } from './lib/deck'
+import { DeckDB } from './storage'
 
 interface Payload {
   [key: string]: any;
@@ -27,7 +28,7 @@ export const stateActions = {
     notification.dismissed = true
     notifications.value = notifications.value.filter(note => !note.dismissed)
   },
-  'decks/new' (): Deck {
+  'decks/new' (): IDeck {
     return defaultDeck()
   }
 }
@@ -44,5 +45,15 @@ export function useState (field: string): { [key: string]: any } {
 
   return { collection, actions }
 }
+
+const deckDB = new DeckDB()
+console.log('deck db', deckDB)
+deckDB.putDeck(defaultDeck()).then(() => {
+  return deckDB.decks.toArray()
+}).then(decks => {
+  console.log('Created Decks DB', decks)
+}).catch(error => {
+  console.error('Cannot use in-browser database. This happens for example in Firefox when used in private mode. Unfortunately there is no fix. Please use this app outside of private mode. You can read more about the issue here: https://bugzilla.mozilla.org/show_bug.cgi?id=781982 and here: https://bugzilla.mozilla.org/show_bug.cgi?id=1639542', error)
+})
 
 export default reactive(state)
