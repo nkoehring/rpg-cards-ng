@@ -1,3 +1,5 @@
+import { Ref } from 'vue'
+
 // page width x page height
 export const enum PageSize {
   A4 = '210mm 297mm',
@@ -62,10 +64,23 @@ export interface Deck {
 }
 
 export interface Settings {
-  color: string;
+  /* no global settings, yet */
 }
 
-export interface StoredStuff {
+export interface StoredSettings {
   decks: Deck[];
   defaults: Settings;
+}
+
+export interface Notification {
+  level: 'warning' | 'error' | 'info';
+  title: string;
+  content: string;
+  dismissed: boolean;
+}
+
+export interface State {
+  settings: Ref<Settings>;
+  decks: Ref<Deck[]>;
+  notifications: Ref<Notification[]>;
 }

@@ -1,22 +1,11 @@
-import './class-component-hooks'
-import Vue from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue'
 import router from './router'
-// import './registerServiceWorker'
-import './directives'
+import state from './state'
 
-import StorageHandler from './storage'
+import App from './App.vue'
 
-declare module 'vue/types/vue' {
-  interface Vue {
-    $storage: StorageHandler;
-  }
-}
+const app = createApp(App)
+app.provide('state', state)
+app.use(router)
 
-Vue.config.productionTip = false
-Vue.prototype.$storage = new StorageHandler()
-
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+app.mount('#app')

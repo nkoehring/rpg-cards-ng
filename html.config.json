@@ -1,0 +1,21 @@
+{
+  "title": "vue3-app-starter",
+  "meta": {
+    "viewport": "width=device-width,initial-scale=1.0",
+    "description": "vue3 app starter with typescript support"
+  },
+  "logo": "./src/assets/logo.svg",
+  "favicons": {
+    "icons": {
+      "favicons": true,
+      "android": true,
+      "appleIcon": true,
+      "appleStartup": false,
+      "coast": false,
+      "firefox": false,
+      "yandex": false,
+      "windows": false
+    }
+  },
+  "template": "./public/index.html"
+}

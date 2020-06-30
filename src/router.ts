@@ -1,34 +1,20 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from './views/Home.vue'
+import { createRouter, createMemoryHistory, createWebHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
 
-Vue.use(VueRouter)
+// const AsyncDeck = () => import(/* webpackChunkName: "deck", webpackPrefetch: 10 */'./views/Deck.vue')
+// const AsyncPrint = () => import(/* webpackChunkName: "print", webpackPrefetch: 1 */'./views/Print.vue')
+const AsyncDeck = () => import(/* webpackChunkName: "deck" */'./views/Deck.vue')
+const AsyncPrint = () => import(/* webpackChunkName: "print" */'./views/Print.vue')
 
-const routes = [{
-  path: '/',
-  name: 'Home',
-  component: Home
-}, {
-  path: '/deck/:id',
-  name: 'Deck',
-  component: () => import(/* webpackChunkName "deck" */ './views/Deck.vue')
-}, {
-  path: '/print/:id',
-  name: 'Print',
-  component: () => import(/* webpackChunkName "print" */ './views/Print.vue')
-}, {
-  path: '/about',
-  name: 'About',
-  // route level code-splitting
-  // this generates a separate chunk (about.[hash].js) for this route
-  // which is lazy-loaded when the route is visited.
-  component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-}]
+const isServer = typeof window === 'undefined'
+const history = isServer ? createMemoryHistory() : createWebHistory()
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+export default createRouter({
+  history,
+  strict: true,
+  routes: [
+    { path: '/', name: 'Home', component: Home },
+    { path: '/deck/:id', name: 'Deck', component: AsyncDeck },
+    { path: '/print/:id', name: 'Print', component: AsyncPrint, meta: { bodyClass: 'print' } },
+  ]
 })
-
-export default router
