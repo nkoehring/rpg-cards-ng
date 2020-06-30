@@ -1,6 +1,6 @@
 <template>
   <transition-group name="notifications" tag="section" class="notification-section">
-    <p class="note" :class="note.level" v-for="note in notifications">
+    <p :key="i" class="note" :class="note.level" v-for="(note, i) in notifications">
       <strong>{{ note.title }}</strong>
       <div v-html="note.content" />
       <button @click="$emit('dismiss', note)">dismiss</button>
