@@ -1,6 +1,6 @@
 <template>
   <transition-group name="notifications" tag="section" class="notification-section">
-    <p class="note" :class="note.level" v-for="note in notDismissedNotes">
+    <p class="note" :class="note.level" v-for="note in notifications">
       <strong>{{ note.title }}</strong>
       <div v-html="note.content" />
       <button @click="$emit('dismiss', note)">dismiss</button>
@@ -16,12 +16,6 @@ export default defineComponent({
   name: 'Notifications',
   props: {
     notifications: Array
-  },
-  computed: {
-    notDismissedNotes (): Notification[] {
-      const notes = this.notifications as Notification[]
-      return notes.filter(note => !note.dismissed)
-    }
   }
 })
 </script>
