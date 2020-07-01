@@ -22,7 +22,7 @@ export default {
   },
 
   // DECK ACTIONS
-  'decks/new' (): IDeck {
-    return defaultDeck()
+  'decks/new' (decks: Ref<IDeck[]>) {
+    decks.value.push(defaultDeck())
   }
 }

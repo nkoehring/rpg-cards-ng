@@ -1,9 +1,9 @@
 import { reactive, ref } from 'vue'
 import { State, KV } from '../types'
 import { DeckDB } from '../storage'
-import stateActions from './actions'
 import { defaultDeck } from '../lib/deck'
 import { defaultCard } from '../lib/card'
+import stateActions from './actions'
 
 const state: State = {
   settings: ref({}),
@@ -12,11 +12,11 @@ const state: State = {
   initialized: ref(false)
 }
 
-export function useState (field: string): { [key: string]: any } {
-  const collection = ref(state[field])
+export function useState (prop: string): { [key: string]: any } {
+  const collection = state[prop]
   const actions = Object.keys(stateActions).reduce((acc, key) => {
-    if (key.startsWith(`${field}/`)) {
-      const newKey = key.split('/')[1]
+    if (key.startsWith(`${prop}/`)) {
+      const newKey = key.slice(prop.length + 1)
       acc[newKey] = (payload: KV<any>) => stateActions[key](collection, payload)
     }
     return acc

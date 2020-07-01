@@ -3,11 +3,11 @@
 
   <section name="deck-covers" class="cards" :class="{ centered: !decks.length }">
     <router-link :to="{ name: 'Deck', params: { id: deck.id } }" :key="deck.id" v-for="deck in decks">
-      <CardBack :icon="deck.icon" :color="deck.color" :size="deck.cardSize">
-        {{ deck.name }} ({{ deck.cards.length }})
-      </CardBack>
+      <Card :icon="deck.icon" :color="deck.color" :size="deck.cardSize">
+        <template #back>{{ deck.name }} ({{ deck.cards.length }})</template>
+      </Card>
     </router-link>
-    <CardBack @click="newDeck" icon="plus" />
+    <Card id="_add_deck" @click="newDeck" />
   </section>
 
 </template>
@@ -16,17 +16,19 @@
 import { defineComponent } from 'vue'
 import { useState } from '@/state'
 
-import CardBack from '@/components/CardBack.vue'
+import Card from '@/components/Card.vue'
 
 
 export default defineComponent({
   name: 'Home',
-  components: { CardBack },
+  components: { Card },
   setup () {
-    const { collection: decks, actions } = useState('decks')
+    const { collection: decks, actions: deckActions } = useState('decks')
+
     return {
       decks,
-      newDeck: actions['decks/new']
+      // TODO: open popup with Deck settings after creation
+      newDeck: deckActions.new
     }
   }
 })
