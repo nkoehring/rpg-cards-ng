@@ -36,12 +36,6 @@ body.print {
   border: none;
 }
 
-a {
-  display: inline-block;
-  height: 1.15em;
-  border-bottom: 1px dotted white;
-}
-
 #logo {
   transition: transform .3s ease-out;
 }
@@ -86,6 +80,13 @@ section.notification-section > .note {
   border: .5em solid #000;
   transition: opacity .5s ease, transform .3s ease;
 }
+section.notification-section > .note a {
+  display: inline-block;
+  height: 1.15em;
+  border-bottom: 1px dotted white;
+}
+
+
 section.notification-section > .warning {
   border-color: red;
 }
