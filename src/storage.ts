@@ -1,5 +1,6 @@
 import Dexie from 'dexie'
-import { IDeck, ICard, CardSize, Arrangement, PageSize } from './types'
+import { CardSize, Arrangement, PageSize } from './consts'
+import { IDeck, ICard } from './types'
 
 interface IDeckTable {
   id: number;

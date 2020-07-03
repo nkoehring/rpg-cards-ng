@@ -9,7 +9,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { KV, CardSize } from '@/types'
+import { KV } from '@/types'
+import { CardSize, defaultCardSize } from '@/consts'
 import { cardSizeToStyle } from '@/lib/card'
 import iconPath from '@/lib/iconPath'
 
@@ -32,7 +33,7 @@ export default defineComponent({
     },
     cssVars (): KV<string> {
       const backgroundColor = this.color || 'transparent'
-      const size = this.size as CardSize || CardSize.Poker
+      const size = this.size as CardSize || defaultCardSize
       return {
         backgroundColor,
         ...cardSizeToStyle(size)

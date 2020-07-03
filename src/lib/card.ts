@@ -1,4 +1,5 @@
-import { ICard, CardSize } from '../types'
+import { CardSize } from '../consts'
+import { ICard } from '../types'
 
 export function defaultCard (): ICard {
   return {

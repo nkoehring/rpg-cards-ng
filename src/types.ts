@@ -1,28 +1,5 @@
 import { Ref } from 'vue'
-
-// page width x page height
-export const enum PageSize {
-  A4 = '210mm 297mm',
-  USLetter = '8.5in 11in',
-  JISB4 = '182mm 257mm',
-  A3 = '297mm 420mm',
-  A5 = '148mm 210mm',
-  USLegal = '8.5in 14in',
-  USLedger = '11in 17in',
-  JISB5 = '257mm 364mm'
-}
-
-// card width x card height
-export const enum CardSize {
-  Poker = '64x89',
-  Bridge = '57x89'
-}
-
-export const enum Arrangement {
-  DoubleSided = 'doublesided',
-  FrontOnly = 'frontonly',
-  SideBySide = 'sidebyside'
-}
+import { PageSize, CardSize, Arrangement } from './consts'
 
 export interface KV<V> {
   [key: string]: V;
@@ -82,5 +59,6 @@ export interface State {
   settings: Ref<Settings>;
   decks: Ref<IDeck[]>;
   notifications: Ref<Notification[]>;
-  initialized: Ref<boolean>;
+  icons: Ref<string[]>;
+  popup: Ref<boolean>;
 }

@@ -8,6 +8,11 @@
   <main>
     <router-view />
   </main>
+
+  <div id="popup" v-show="popupShown">
+    <div class="popup-content">
+    </div>
+  </div>
 </template>
 
 <script lang='ts'>
@@ -18,14 +23,21 @@ import Notifications from '@/components/Notifications.vue'
 
 export default defineComponent({
   setup () {
-    const { collection: notifications, actions } = useState('notifications')
+    const { collection: popupShown } = useState('popup')
+    const { collection: notifications, actions: notificationActions } = useState('notifications')
     return {
+      popupShown,
       notifications,
-      addNotification: actions.add,
-      dismissNotification: actions.dismiss
+      addNotification: notificationActions.add,
+      dismissNotification: notificationActions.dismiss,
     }
   },
   components: { Notifications, Logo },
+  data () {
+    return {
+      showPopup: false
+    }
+  },
   watch: {
     '$route' (newRoute) {
       const bodyEl = document.body

@@ -1,6 +1,6 @@
 import { Ref } from 'vue'
 import { Notification, IDeck, KV } from '../types'
-import { defaultDeck } from '../lib/deck'
+import { defaultDeck, defaultDeckValues } from '../lib/deck'
 
 /// actions are called like action['sub/foo'](state.sub, payload)
 export default {
@@ -22,7 +22,37 @@ export default {
   },
 
   // DECK ACTIONS
-  'decks/new' (decks: Ref<IDeck[]>) {
-    decks.value.push(defaultDeck())
-  }
+  // returns index of newly created deck
+  'decks/new' (decks: Ref<IDeck[]>): number {
+    const newDeck = defaultDeck()
+    const id = decks.value.push(newDeck) - 1
+    newDeck.id = id
+
+    return id
+  },
+  // updates decks[updatedDeck.id]
+  'decks/update' (decks: Ref<IDeck[]>, updatedDeck: IDeck): boolean {
+    const id = updatedDeck.id
+    if (!id || !decks.value[id]) return false // can't update non-existing deck
+
+    decks.value[id] = {
+      ...decks.value[id],
+      ...updatedDeck
+    }
+    return true
+  },
+
+  // POPUP ACTIONS
+  'popup/show' (popup: Ref<boolean>): boolean {
+    popup.value = true
+    return popup.value
+  },
+  'popup/hide' (popup: Ref<boolean>): boolean {
+    popup.value = false
+    return popup.value
+  },
+  'popup/toggle' (popup: Ref<boolean>): boolean {
+    popup.value = !popup.value
+    return popup.value
+  },
 }

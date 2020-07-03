@@ -9,7 +9,8 @@ const state: State = {
   settings: ref({}),
   decks: ref([]),
   notifications: ref([]),
-  initialized: ref(false)
+  icons: ref(['mouth-watering', 'robe', 'thorny-triskelion']),
+  popup: ref(false)
 }
 
 export function useState (prop: string): { [key: string]: any } {
