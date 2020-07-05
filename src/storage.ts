@@ -3,12 +3,12 @@ import { CardSize, Arrangement, PageSize } from './consts'
 import { IDeck, ICard } from './types'
 
 interface IDeckTable {
-  id: number;
+  id: string;
   name: string;
   description: string;
   color: string;
   icon: string;
-  cards: number[]; // array of card IDs
+  cards: string[]; // array of card IDs
   cardSize: CardSize;
   arrangement: Arrangement;
   pageSize: PageSize;
@@ -16,8 +16,8 @@ interface IDeckTable {
 }
 
 export class DeckDB extends Dexie {
-  public decks: Dexie.Table<IDeckTable, number>
-  public cards: Dexie.Table<ICard, number>
+  public decks: Dexie.Table<IDeckTable, string>
+  public cards: Dexie.Table<ICard, string>
   public tags: Dexie.Table<string>
 
   public constructor () {
@@ -25,8 +25,8 @@ export class DeckDB extends Dexie {
     console.log('initializing deck db')
 
     this.version(1).stores({
-      decks: '++id,name',
-      cards: '++id,name,*tags',
+      decks: '&id,name',
+      cards: '&id,name,*tags',
       tags: '&tag'
     })
 
@@ -53,7 +53,7 @@ export class DeckDB extends Dexie {
   }
 
   // add or update card
-  public async putCard (card: ICard, deckId: number) {
+  public async putCard (card: ICard, deckId: string) {
     const cardId = await this.cards.put(card)
     const deck = await this.decks.get(deckId)
 
@@ -64,9 +64,9 @@ export class DeckDB extends Dexie {
   }
 
   public async getDecks () {
-    const decks = await this.decks.toArray()
+    const deckEntries = await this.decks.toArray()
 
-    return Promise.all(decks.map(async deckTable => {
+    const decks = await Promise.all(deckEntries.map(async deckTable => {
       const cardIds = deckTable.cards
       const deck: IDeck = {
         ...deckTable,
@@ -74,5 +74,13 @@ export class DeckDB extends Dexie {
       }
       return deck
     }))
+
+    // returns object with deck ids as keys
+    const decksById = decks.reduce((acc, deck) => {
+      acc[deck.id] = deck
+      return acc
+    }, {})
+
+    return decksById
   }
 }

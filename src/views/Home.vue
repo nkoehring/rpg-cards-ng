@@ -8,17 +8,17 @@
     <Card id="_add_deck" @click="addDeck" />
   </section>
 
-  <teleport to="#popup > .popup-content">
+  <Popup>
     <div class="deck new-deck-form-wrapper">
       <header>Create a new deck of cards</header>
-      <DeckForm :deck="newDeck" @save="saveDeck" @close="hidePopup" />
+      <DeckForm :deck="newDeck" @save="saveDeck" @cancel="cancelDeck" />
       <footer class="centered">
         You can also
         <button @click="importDeck">import</button>
         an existing deck.
       </footer>
     </div>
-  </teleport>
+  </Popup>
 
 </template>
 
@@ -26,31 +26,37 @@
 import { defineComponent, ref, computed } from 'vue'
 import { useState } from '@/state'
 
+import Popup from '@/components/Popup.vue'
 import Card from '@/components/Card.vue'
 import DeckCard from '@/components/DeckCard.vue'
 import DeckForm from '@/components/DeckForm.vue'
 
 export default defineComponent({
   name: 'Home',
-  components: { Card, DeckCard, DeckForm },
+  components: { Popup, Card, DeckCard, DeckForm },
   setup () {
     const { actions: popupActions } = useState('popup')
     const { collection: decks, actions: deckActions } = useState('decks')
 
-    const newDeckIndex = ref(0)
-    const newDeck = computed(() => decks.value[newDeckIndex.value])
+    const newDeckId = ref('')
+    const newDeck = computed(() => decks.value[newDeckId.value])
 
     const addDeck = () => {
-      const idx = deckActions.new()
-      newDeckIndex.value = idx
+      const id = deckActions.new()
+      newDeckId.value = id
       popupActions.show()
     }
 
     const saveDeck = (updatedDeck) => {
-      console.log('saving deck', updatedDeck)
-      updatedDeck.id = newDeckIndex.value
+      updatedDeck.id = newDeckId.value
       deckActions.update(updatedDeck)
       popupActions.hide()
+    }
+
+    const cancelDeck = () => {
+      popupActions.hide()
+      deckActions.remove(newDeckId.value)
+      newDeckId.value = ''
     }
 
     return {
@@ -58,6 +64,7 @@ export default defineComponent({
       addDeck,
       newDeck,
       saveDeck,
+      cancelDeck,
       hidePopup: popupActions.hide
       // importDeck: deckActions.import,
     }

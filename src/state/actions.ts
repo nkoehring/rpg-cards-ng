@@ -1,6 +1,8 @@
 import { Ref } from 'vue'
-import { Notification, IDeck, KV } from '../types'
-import { defaultDeck, defaultDeckValues } from '../lib/deck'
+import { Notification, State, IDeck, KV } from '../types'
+import { defaultDeck } from '../lib/deck'
+
+type Decks = State['decks']
 
 /// actions are called like action['sub/foo'](state.sub, payload)
 export default {
@@ -23,15 +25,14 @@ export default {
 
   // DECK ACTIONS
   // returns index of newly created deck
-  'decks/new' (decks: Ref<IDeck[]>): number {
+  'decks/new' (decks: Ref<Decks>): string {
     const newDeck = defaultDeck()
-    const id = decks.value.push(newDeck) - 1
-    newDeck.id = id
-
-    return id
+    const id = newDeck.id
+    decks.value[id] = newDeck
+    return newDeck.id
   },
   // updates decks[updatedDeck.id]
-  'decks/update' (decks: Ref<IDeck[]>, updatedDeck: IDeck): boolean {
+  'decks/update' (decks: Ref<Decks>, updatedDeck: IDeck): boolean {
     const id = updatedDeck.id
     if (!id || !decks.value[id]) return false // can't update non-existing deck
 
@@ -40,6 +41,9 @@ export default {
       ...updatedDeck
     }
     return true
+  },
+  'decks/remove' (decks: Ref<Decks>, deckId: string) {
+    delete decks.value[deckId]
   },
 
   // POPUP ACTIONS

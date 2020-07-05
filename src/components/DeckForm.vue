@@ -15,7 +15,7 @@
       </select>
 
       <button type="submit">Save deck</button>
-      <button class="cancel" @click.prevent="$emit('close')">cancel</button>
+      <button class="cancel" @click.prevent="$emit('cancel')">cancel</button>
     </div>
 
     <DeckCard :deck="{ icon, name, description, color, cardSize, cards: [] }" />
@@ -47,7 +47,8 @@ export default defineComponent({
     }
   },
   watch: {
-    deck (deck, oldDeck) {
+    deck (deck) {
+      if (deck === undefined) return
       this.icon = deck.icon
       this.name = deck.name
       this.description = deck.description

@@ -17,7 +17,7 @@ export interface ICardContent {
 }
 
 export interface ICard {
-  id: number;
+  id: string;
   name: string;
   tags: string[];
   icon: string;
@@ -27,7 +27,7 @@ export interface ICard {
 }
 
 export interface IDeck {
-  id: number;
+  id: string;
   name: string;
   description: string;
   color: string;
@@ -57,7 +57,7 @@ export interface Notification {
 
 export interface State {
   settings: Ref<Settings>;
-  decks: Ref<IDeck[]>;
+  decks: Ref<{ [key: string]: IDeck }>;
   notifications: Ref<Notification[]>;
   icons: Ref<string[]>;
   popup: Ref<boolean>;

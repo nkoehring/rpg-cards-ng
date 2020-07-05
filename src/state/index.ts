@@ -7,7 +7,7 @@ import stateActions from './actions'
 
 const state: State = {
   settings: ref({}),
-  decks: ref([]),
+  decks: ref({}),
   notifications: ref([]),
   icons: ref(['mouth-watering', 'robe', 'thorny-triskelion']),
   popup: ref(false)

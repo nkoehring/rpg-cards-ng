@@ -1,8 +1,9 @@
 import { CardSize, PageSize, Arrangement } from '../consts'
 import { IDeck } from '../types'
+import randomId from './randomId'
 
 export const defaultDeckValues: IDeck = {
-  id: 0,
+  id: '',
   icon: 'robe',
   name: 'the nameless',
   description: '',
@@ -15,7 +16,9 @@ export const defaultDeckValues: IDeck = {
 }
 
 export function defaultDeck (): IDeck {
-  return { ...defaultDeckValues }
+  const newDeck = { ...defaultDeckValues }
+  newDeck.id = randomId()
+  return newDeck
 }
 
 export function isValidDeck (deck: any): boolean {

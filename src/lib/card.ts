@@ -1,9 +1,10 @@
 import { CardSize } from '../consts'
 import { ICard } from '../types'
+import randomId from './randomId'
 
 export function defaultCard (): ICard {
   return {
-    id: 0,
+    id: randomId(),
     name: 'no title yet',
     tags: [],
     icon: 'robe',
