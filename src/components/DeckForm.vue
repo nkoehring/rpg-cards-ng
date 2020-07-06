@@ -18,7 +18,9 @@
       <button class="cancel" @click.prevent="$emit('cancel')">cancel</button>
     </div>
 
-    <DeckCard :deck="{ icon, name, description, color, cardSize, cards: [] }" />
+    <CardBack :icon="icon" :color="color" :size="cardSize">
+      {{ name }}
+    </CardBack>
   </form>
 </template>
 
@@ -26,10 +28,10 @@
 import { defineComponent, ref } from 'vue'
 import { useState } from '@/state'
 import { cardSizeOptions, defaultCardSize } from '@/consts'
-import DeckCard from '@/components/DeckCard.vue'
+import CardBack from '@/components/CardBack.vue'
 
 export default defineComponent({
-  components: { DeckCard },
+  components: { CardBack },
   props: {
     deck: Object
   },

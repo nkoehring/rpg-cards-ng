@@ -5,12 +5,15 @@
 
   <Notifications :notifications="notifications" @dismiss="dismissNotification" />
 
-  <main>
+  <main :name="routeName">
     <router-view />
   </main>
 
   <div id="popup" v-show="popupShown">
-    <div class="popup-content">
+    <div class="popup-content"></div>
+  </div>
+  <div id="loading-popup" v-show="loading">
+    <div class="popup-content spinner">
     </div>
   </div>
 </template>
@@ -23,9 +26,11 @@ import Notifications from '@/components/Notifications.vue'
 
 export default defineComponent({
   setup () {
+    const { collection: loading } = useState('loading')
     const { collection: popupShown } = useState('popup')
     const { collection: notifications, actions: notificationActions } = useState('notifications')
     return {
+      loading,
       popupShown,
       notifications,
       addNotification: notificationActions.add,
@@ -35,16 +40,29 @@ export default defineComponent({
   components: { Notifications, Logo },
   data () {
     return {
-      showPopup: false
+      routeName: 'home'
     }
   },
   watch: {
-    '$route' (newRoute) {
+    // this adds a css class to the body equal to the name of the current root
+    '$route' (newRoute, oldRoute) {
       const bodyEl = document.body
-      bodyEl.className = "" // TODO: is this really the way to go here?
+      const oldClass = oldRoute.name?.toLowerCase()
+      const newClass = newRoute.name?.toLowerCase()
+      this.routeName = newClass || ''
 
-      const bodyClass = newRoute.meta.bodyClass
-      if (bodyClass) bodyEl.classList.add(bodyClass)
+      if (oldClass) bodyEl.classList.remove(oldClass)
+      if (newClass) bodyEl.classList.add(newClass)
+    },
+    loading (isLoading) {
+      const bodyEl = document.body
+      if (isLoading) bodyEl.classList.add('loading')
+      else bodyEl.classList.remove('loading')
+    },
+    popupShown (isShown) {
+      const bodyEl = document.body
+      if (isShown) bodyEl.classList.add('popup')
+      else bodyEl.classList.remove('popup')
     }
   },
   mounted () {

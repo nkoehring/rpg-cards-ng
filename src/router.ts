@@ -15,6 +15,6 @@ export default createRouter({
   routes: [
     { path: '/', name: 'Home', component: Home },
     { path: '/deck/:id', name: 'Deck', component: AsyncDeck },
-    { path: '/print/:id', name: 'Print', component: AsyncPrint, meta: { bodyClass: 'print' } },
+    { path: '/print/:id', name: 'Print', component: AsyncPrint },
   ]
 })

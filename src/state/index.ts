@@ -5,12 +5,13 @@ import { defaultDeck } from '../lib/deck'
 import { defaultCard } from '../lib/card'
 import stateActions from './actions'
 
-const state: State = {
+export const state: State = {
   settings: ref({}),
   decks: ref({}),
   notifications: ref([]),
   icons: ref(['mouth-watering', 'robe', 'thorny-triskelion']),
-  popup: ref(false)
+  popup: ref(false),
+  loading: ref(false)
 }
 
 export function useState (prop: string): { [key: string]: any } {
@@ -44,4 +45,4 @@ deckDB.putDeck(testDeck).then(() => {
 })
 */
 
-export default reactive(state)
+export default state

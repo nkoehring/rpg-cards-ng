@@ -21,7 +21,6 @@ body.print {
   max-width: 90rem;
   margin: auto;
   font-size: 1.6rem;
-  min-height: 100vh;
 }
 
 #app > main {
@@ -36,19 +35,24 @@ body.print {
   border: none;
 }
 
-#logo {
+.popup > #app > :not(#popup) {
+  filter: blur(10px);
+}
+
+
+.logo {
   transition: transform .3s ease-out;
 }
-#logo path.house {
+.logo path.house {
   fill: #222;
   fill-opacity: 0.0;
   transition: fill-opacity .3s ease-out .2s;
 }
 
-#logo:hover {
+.home-link > .logo:hover {
   transform: scale(4) translate(5%, 15%);
 }
-#logo:hover path.house {
+.home-link > .logo:hover path.house {
   fill-opacity: 1.0;
 }
 
@@ -91,7 +95,7 @@ section.notification-section > .warning {
   border-color: red;
 }
 
-#popup {
+#popup, #loading-popup {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,16 +104,54 @@ section.notification-section > .warning {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #0008;
+  background: radial-gradient(#101010, transparent);
   overflow-y: auto;
 }
-#popup > .popup-content {
+.popup-content {
   width: 75rem;
   max-width: 100vw;
 }
 
-main.popup > :not(#popup) {
-  filter: blur(10px);
+.spinner {
+  font-size: 10px;
+  margin: 50px auto;
+  text-indent: -9999em;
+  width: 11em;
+  height: 11em;
+  border-radius: 50%;
+  background: #8193a2;
+  background: linear-gradient(to right, #8193a2 10%, rgba(129,147,162, 0) 42%);
+  position: relative;
+  animation: spin 1.4s infinite linear;
+  transform: translateZ(0);
+}
+.spinner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  background: #8193a2;
+  border-radius: 100% 0 0 0;
+}
+.spinner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 95%;
+  height: 95%;
+  background: #101010;
+  border-radius: 50%;
+  margin: auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 input, button, select {
@@ -133,7 +175,6 @@ select {
 section.cards {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-evenly;
   justify-content: flex-start;
 }
 section.cards.centered {

@@ -1,11 +1,13 @@
 <template>
   <header>RPG Cards for y'all</header>
 
-  <section name="deck-covers" class="cards" :class="{ centered: !decks.length }">
+  <section name="deck-covers" class="cards" :class="{ centered: decks.length === 0 }">
     <router-link :to="{ name: 'Deck', params: { id: deck.id } }" :key="deck.id" v-for="deck in decks">
-      <DeckCard :deck="deck" />
+      <CardBack :icon="deck.icon" :color="deck.color" :size="deck.cardSize">
+        {{ deck.name }} ({{ deck.cards.length }})
+      </CardBack>
     </router-link>
-    <Card id="_add_deck" @click="addDeck" />
+    <CardBack id="_add" @click="addDeck" />
   </section>
 
   <Popup>
@@ -27,13 +29,12 @@ import { defineComponent, ref, computed } from 'vue'
 import { useState } from '@/state'
 
 import Popup from '@/components/Popup.vue'
-import Card from '@/components/Card.vue'
-import DeckCard from '@/components/DeckCard.vue'
+import CardBack from '@/components/CardBack.vue'
 import DeckForm from '@/components/DeckForm.vue'
 
 export default defineComponent({
   name: 'Home',
-  components: { Popup, Card, DeckCard, DeckForm },
+  components: { Popup, CardBack, DeckForm },
   setup () {
     const { actions: popupActions } = useState('popup')
     const { collection: decks, actions: deckActions } = useState('decks')

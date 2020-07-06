@@ -1,5 +1,5 @@
 <template>
-  <svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <defs>
       <filter id="outer-shadow" height="300%" width="300%" x="-100%" y="-100%">
         <feFlood flood-color="rgba(201, 201, 201, 1)" result="flood"></feFlood>

@@ -61,4 +61,5 @@ export interface State {
   notifications: Ref<Notification[]>;
   icons: Ref<string[]>;
   popup: Ref<boolean>;
+  loading: Ref<boolean>;
 }
