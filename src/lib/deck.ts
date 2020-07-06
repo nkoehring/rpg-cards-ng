@@ -17,6 +17,7 @@ export const defaultDeckValues: IDeck = {
 
 export function defaultDeck (): IDeck {
   const newDeck = { ...defaultDeckValues }
+  newDeck.cards = [] // make sure not to copy a reference
   newDeck.id = randomId()
   return newDeck
 }

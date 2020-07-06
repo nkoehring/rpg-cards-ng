@@ -18,7 +18,7 @@
     </header>
 
     <section name="deck-cards" class="cards" :class="{ centered: deck.cards.length === 0 }">
-      <CardBack v-for="card in deck.cards"
+      <FlipCard v-for="card in deck.cards"
         :key="card.id"
         :id="card.id"
         :card="card"
@@ -37,12 +37,13 @@ import { useRoute } from 'vue-router'
 import { IDeck } from '@/types'
 import state from '@/state'
 import iconPath from '@/lib/iconPath'
+import FlipCard from '@/components/FlipCard.vue'
 import CardBack from '@/components/CardBack.vue'
 
 const name = 'Deck'
 
 export default defineComponent({
-  components: { CardBack },
+  components: { FlipCard, CardBack },
   setup () {
     const route = useRoute()
 

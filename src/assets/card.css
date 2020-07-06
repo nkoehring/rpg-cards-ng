@@ -1,8 +1,6 @@
-.card-front, .card-back {
+.card-front {
   display: flex;
   flex-flow: column nowrap;
-}
-.card-front {
   justify-content: flex-start;
 }
 .card-front > header {
@@ -39,13 +37,6 @@
   font-size: 1.2rem;
   color: black;
   overflow: hidden;
-}
-
-.card-back {
-  justify-content: center;
-}
-.card-back > .icon-wrapper {
-  margin: 3em;
 }
 
 .card-content .cdx-block {

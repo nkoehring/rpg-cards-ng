@@ -9,13 +9,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { KV, ICard } from '@/types'
-import { CardSize, defaultCardSize } from '@/consts'
-import { cardSizeToStyle } from '@/lib/card'
+import { KV } from '@/types'
+import { cardCSSVars } from '@/lib/card'
 import iconPath from '@/lib/iconPath'
 
 export default defineComponent({
-  name: 'Card',
+  name: 'CardBack',
   props: {
     icon: String,
     color: String,
@@ -26,19 +25,8 @@ export default defineComponent({
       const icon = this.icon || 'plus'
       return iconPath(icon)
     },
-    showBackSide (): boolean {
-      return true
-    },
-    showFrontSide (): boolean {
-      return false
-    },
     cssVars (): KV<string> {
-      const backgroundColor = this.color || 'transparent'
-      const size = this.size as CardSize || defaultCardSize
-      return {
-        backgroundColor,
-        ...cardSizeToStyle(size)
-      }
+      return cardCSSVars(this.size, this.color)
     }
   }
 })
@@ -48,7 +36,7 @@ export default defineComponent({
 .card-back {
   display: flex;
   flex-flow: column nowrap;
-  justify-content: space-evenly;
+  justify-content: center;
   text-align: center;
   line-height: 4rem;
   font-size: 2rem;
@@ -67,7 +55,7 @@ export default defineComponent({
   display: none;
 }
 .card-back > .icon-wrapper {
-  width: 90%;
+  width: 70%;
   margin: auto;
 }
 </style>

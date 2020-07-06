@@ -1,4 +1,4 @@
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { State, KV } from '../types'
 import { DeckDB } from '../storage'
 import { defaultDeck } from '../lib/deck'
